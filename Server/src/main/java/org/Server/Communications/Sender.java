@@ -1,15 +1,9 @@
 package org.Server.Communications;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Component;
 
-@Service
+@Component
 public class Sender {
-
-    @Autowired
-    public Sender() {
-
-    }
 
     /*
         @Brief: This function notifies the client that drawing has ended
