@@ -1,19 +1,38 @@
 package org.Server.Game;
 
 import java.util.ArrayList;
+import org.Server.DBMS.DBController;
+import org.springframework.stereotype.Component;
 
 public class GameSession {
 
     private int playerCount;
-    private ArrayList<Player> players;
+    private final ArrayList<Player> players;
     private String[] words;
-    private ArrayList<Round> rounds;
+    private final ArrayList<Round> rounds;
+    private final String sessionName;
 
-    public GameSession(int playerCount) {
+    /*
+        @Brief: This constructor is used to initialize the game session.
+        @Param: playerCount - The player count for the game session.
+        @Param: playerName - The name of the player.
+    */
+
+    public GameSession(int playerCount, Player player, String sessionName) {
         this.playerCount = playerCount;
         this.words = new String[playerCount];
-        this.players = new ArrayList<Player>();
-        this.rounds = new ArrayList<Round>();
+        this.players = new ArrayList<>();
+        this.rounds = new ArrayList<>();
+        this.sessionName = sessionName;
+        this.players.add(player);
+    }
+
+    /*
+        @Brief: This function is used to get the session name for the game session.
+        @Return: String - Returns the session name.
+     */
+    public String getSessionName() {
+        return this.sessionName;
     }
 
     /*
