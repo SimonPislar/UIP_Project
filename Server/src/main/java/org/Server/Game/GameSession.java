@@ -1,8 +1,6 @@
 package org.Server.Game;
 
 import java.util.ArrayList;
-import org.Server.DBMS.DBController;
-import org.springframework.stereotype.Component;
 
 public class GameSession {
 
