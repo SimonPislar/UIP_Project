@@ -1,0 +1,45 @@
+.button {
+    border: none;
+    border-radius: 2em;
+    cursor: pointer;
+    outline: none;
+    color: white;
+    background-color: #f47dda;
+}
+
+.button.small {
+    font-size: 5px;
+}
+
+.button.medium {
+    font-size: 16px;
+}
+
+.button.large {
+    width: 12em;
+    height: 2em;
+    font-size: 1.8em;
+}
+
+.button.large:hover {
+    background-color: #F695E1;
+}
+
+.button.large:active {
+    background-color: #f8ade8;
+}
+
+.button.small {
+    width: 8em;
+    height: 2em;
+    font-size: 1.8em;
+}
+
+.button.small:hover {
+    background-color: #F695E1;
+}
+
+.button.small:active {
+    background-color: #f8ade8;
+}
+
