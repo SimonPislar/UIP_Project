@@ -28,9 +28,9 @@ public class GameController {
         @Param: email - The email of the player.
         @Param: sessionName - The name of the session.
     */
-    public void initializeGame(String email, String sessionName, int playerCount) {
+    public void initializeGame(String email, String sessionName, int playerCount, String IP) {
         User user = this.dbController.getUser(email);
-        Player player = new Player(user.getUsername(), user.getId());
+        Player player = new Player(user.getUsername(), user.getId(), IP);
         GameSession gameSession = new GameSession(playerCount, player, sessionName);
         this.activeGameSessions.add(gameSession);
     }
@@ -60,11 +60,12 @@ public class GameController {
     /*
         @Brief: This function is used to add a player to the game session.
         @Param: email - The email of the player.
+        @Param: IP - The IP of the player.
         @Param: sessionName - The name of the session.
     */
-    public void addPlayerToGameSession(String email, String sessionName) {
+    public void addPlayerToGameSession(String email, String sessionName, String IP) {
         User user = this.dbController.getUser(email);
-        Player player = new Player(user.getUsername(), user.getId());
+        Player player = new Player(user.getUsername(), user.getId(), IP);
         GameSession gameSession = getGameSession(sessionName);
         gameSession.appendPlayer(player);
     }
@@ -76,11 +77,23 @@ public class GameController {
     */
     public void removePlayerFromGameSession(String email, String sessionName) {
         User user = this.dbController.getUser(email);
-        Player player = new Player(user.getUsername(), user.getId());
-        GameSession gameSession = getGameSession(sessionName);
-        gameSession.deletePlayer(player);
+        this.activeGameSessions.forEach(gameSession -> {
+            if (gameSession.getSessionName().equals(sessionName)) {
+                gameSession.getPlayers().removeIf(player -> player.getID() == user.getId());
+            }
+        });
     }
 
-
-
+    /*
+        @Brief: This function is used to change the player count of the game session.
+        @Param: sessionName - The name of the session.
+        @Param: playerCount - The new player count.
+    */
+    public void changePlayerCount(String sessionName, int playerCount) {
+        this.activeGameSessions.forEach(gameSession -> {
+            if (gameSession.getSessionName().equals(sessionName)) {
+                gameSession.setPlayerCount(playerCount);
+            }
+        });
+    }
 }
