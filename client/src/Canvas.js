@@ -1,11 +1,13 @@
 import React, {useRef, useEffect, useState} from 'react';
 import { Stage, Layer, Rect } from 'react-konva';
 import Konva from "konva";
+import './CSS/Canvas.css';
+import Button from "./Button";
 
-const CanvasWidth = 800;
+const CanvasWidth = 1000;
 const CanvasHeight = 600;
 
-const Canvas = () => {
+function Canvas({word}) {
     const [drawingColor, setDrawingColor] = useState('#000000');
     const [lineWidth, setLineWidth] = useState(2);
     const isDrawing = useRef(false);
@@ -60,22 +62,35 @@ const Canvas = () => {
                     />
                 </Layer>
             </Stage>
-            <input
-                type="color"
-                value={drawingColor}
-                onChange={(e) => setDrawingColor(e.target.value)}
-                style={{ marginTop: '10px' }}
-            />
-            <input
-                type="range"
-                min="1"
-                max="20"
-                value={lineWidth}
-                onChange={(e) => setLineWidth(e.target.value)}
-                style={{ marginTop: '10px' }}
-            />
+            <div className="canvas-control-container">
+                <div className="word-text">
+                    <p>Draw the word: {word}</p>
+                </div>
+                <div className="paint-controls">
+                    <div>
+                        <input
+                            type="color"
+                            value={drawingColor}
+                            onChange={(e) => setDrawingColor(e.target.value)}
+                            style={{ marginTop: '10px' }}
+                        />
+                        <input
+                            type="range"
+                            min="1"
+                            max="30"
+                            value={lineWidth}
+                            onChange={(e) => setLineWidth(e.target.value)}
+                            style={{ marginTop: '10px' }}
+                        />
+                    </div>
+                </div>
+                <div className="button-container">
+                    <Button size="small" text="Done"/>
+                </div>
+            </div>
         </div>
+
     );
-};
+}
 
 export default Canvas;
