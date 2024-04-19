@@ -9,12 +9,14 @@ public class Drawing {
     private final String tool;
     private final ArrayList<Pair<Player, String>> guesses;
     private final int drawingId;
+    private final int playerId;
 
-    public Drawing(ArrayList<Integer> points, int drawingId) {
+    public Drawing(ArrayList<Integer> points, int drawingId, int playerId) {
         this.points = points;
         this.tool = ""; // TODO: Implement tool selection
         this.guesses = new ArrayList<Pair<Player, String>>();
         this.drawingId = drawingId;
+        this.playerId = playerId;
     }
 
     /*
