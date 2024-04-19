@@ -7,11 +7,13 @@ public class Player {
     final private String name;
     private int points;
     final private int ID;
+    private final String IP;
 
-    public Player(String name, int ID) {
+    public Player(String name, int ID, String IP) {
         this.name = name;
         this.points = 0;
         this.ID = ID;
+        this.IP = IP;
     }
 
     /*
@@ -52,5 +54,13 @@ public class Player {
      */
     public void resetPoints() {
         this.points = 0;
+    }
+
+    /*
+        @Brief: This function is used to get the IP of the player.
+        @Return: String - Returns the IP of the player.
+     */
+    public String getIP() {
+        return this.IP;
     }
 }
