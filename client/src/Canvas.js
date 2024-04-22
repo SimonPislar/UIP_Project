@@ -13,6 +13,12 @@ function Canvas({word}) {
     const isDrawing = useRef(false);
     const stageRef = useRef(null);
 
+    const drawingColorRef = useRef(drawingColor);
+    const lineWidthRef = useRef(lineWidth);
+
+    drawingColorRef.current = drawingColor;
+    lineWidthRef.current = lineWidth;
+
     useEffect(() => {
         const stage = stageRef.current.getStage();
         const layer = new Konva.Layer();
@@ -23,8 +29,8 @@ function Canvas({word}) {
             isDrawing.current = true;
             const pos = stage.getPointerPosition();
             lastLine = new Konva.Line({
-                stroke: drawingColor,
-                strokeWidth: lineWidth,
+                stroke: drawingColorRef.current, // use ref here
+                strokeWidth: lineWidthRef.current, // and here
                 tension: 0.5,
                 lineCap: 'round',
                 lineJoin: 'round',
@@ -38,16 +44,19 @@ function Canvas({word}) {
                 return;
             }
             const pos = stage.getPointerPosition();
-            const points = lastLine.points();
-            lastLine.points([...points, pos.x, pos.y]);
+            const newPoints = [...lastLine.points(), pos.x, pos.y];
+            lastLine.points(newPoints);
+            lastLine.stroke(drawingColorRef.current); // Update the color dynamically
+            lastLine.strokeWidth(lineWidthRef.current); // Update the width dynamically
             layer.batchDraw();
         });
+
 
 
         stage.on('mouseup touchend', function () {
             isDrawing.current = false;
         });
-    }, [drawingColor, lineWidth]);
+    }, []);
 
     return (
         <div className="canvas-container">
@@ -67,22 +76,20 @@ function Canvas({word}) {
                     <p>Draw the word: {word}</p>
                 </div>
                 <div className="paint-controls">
-                    <div>
-                        <input
-                            type="color"
-                            value={drawingColor}
-                            onChange={(e) => setDrawingColor(e.target.value)}
-                            style={{ marginTop: '10px' }}
-                        />
-                        <input
-                            type="range"
-                            min="1"
-                            max="30"
-                            value={lineWidth}
-                            onChange={(e) => setLineWidth(e.target.value)}
-                            style={{ marginTop: '10px' }}
-                        />
-                    </div>
+                    <input
+                        type="color"
+                        value={drawingColor}
+                        onChange={(e) => setDrawingColor(e.target.value)}
+                        style={{ marginTop: '10px' }}
+                    />
+                    <input
+                        type="range"
+                        min="1"
+                        max="40"
+                        value={lineWidth}
+                        onChange={(e) => setLineWidth(e.target.value)}
+                        style={{ marginTop: '10px' }}
+                    />
                 </div>
                 <div className="button-container">
                     <Button size="small" text="Done"/>
