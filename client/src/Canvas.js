@@ -5,7 +5,7 @@ import './CSS/Canvas.css';
 import Button from "./Button";
 
 const CanvasWidth = 1000;
-const CanvasHeight = 600;
+const CanvasHeight = 550;
 
 function Canvas({word}) {
     const [drawingColor, setDrawingColor] = useState('#000000');
@@ -25,71 +25,86 @@ function Canvas({word}) {
         stage.add(layer);
         let lastLine;
 
-        stage.on('mousedown touchstart', function () {
+        const handleMouseDown = () => {
             isDrawing.current = true;
             const pos = stage.getPointerPosition();
             lastLine = new Konva.Line({
-                stroke: drawingColorRef.current, // use ref here
-                strokeWidth: lineWidthRef.current, // and here
+                stroke: drawingColorRef.current,
+                strokeWidth: lineWidthRef.current,
                 tension: 0.5,
                 lineCap: 'round',
                 lineJoin: 'round',
                 points: [pos.x, pos.y],
             });
             layer.add(lastLine);
-        });
+        };
 
-        stage.on('mousemove touchmove', function () {
+        const handleMouseMove = () => {
             if (!isDrawing.current) {
                 return;
             }
             const pos = stage.getPointerPosition();
             const newPoints = [...lastLine.points(), pos.x, pos.y];
             lastLine.points(newPoints);
-            lastLine.stroke(drawingColorRef.current); // Update the color dynamically
-            lastLine.strokeWidth(lineWidthRef.current); // Update the width dynamically
+            lastLine.stroke(drawingColorRef.current);
+            lastLine.strokeWidth(lineWidthRef.current);
             layer.batchDraw();
-        });
+        };
 
-
-
-        stage.on('mouseup touchend', function () {
+        const handleMouseUp = () => {
             isDrawing.current = false;
-        });
+        };
+
+        // Listen for mouse events on the stage for drawing.
+        stage.on('mousedown touchstart', handleMouseDown);
+        stage.on('mousemove touchmove', handleMouseMove);
+
+        // Listen for the mouseup event on the window to handle when the mouse is released outside the canvas.
+        window.addEventListener('mouseup', handleMouseUp);
+        window.addEventListener('touchend', handleMouseUp);
+
+        // Clean up event listeners when the component unmounts or re-renders.
+        return () => {
+            stage.off('mousedown touchstart', handleMouseDown);
+            stage.off('mousemove touchmove', handleMouseMove);
+            window.removeEventListener('mouseup', handleMouseUp);
+            window.removeEventListener('touchend', handleMouseUp);
+        };
     }, []);
 
     return (
         <div className="canvas-container">
+            <div className="top-menu">
+                <h1>Draw the word: {word}</h1>
+            </div>
             <Stage width={CanvasWidth} height={CanvasHeight} ref={stageRef}>
                 <Layer>
-                    <Rect
-                        x={0}
-                        y={0}
-                        width={CanvasWidth}
-                        height={CanvasHeight}
-                        fill="white"
-                    />
+                    <Rect x={0} y={0} width={CanvasWidth} height={CanvasHeight} fill="white"/>
                 </Layer>
             </Stage>
             <div className="canvas-control-container">
-                <div className="word-text">
-                    <p>Draw the word: {word}</p>
-                </div>
                 <div className="paint-controls">
-                    <input
-                        type="color"
-                        value={drawingColor}
-                        onChange={(e) => setDrawingColor(e.target.value)}
-                        style={{ marginTop: '10px' }}
-                    />
-                    <input
-                        type="range"
-                        min="1"
-                        max="40"
-                        value={lineWidth}
-                        onChange={(e) => setLineWidth(e.target.value)}
-                        style={{ marginTop: '10px' }}
-                    />
+                    <div className="color-controls">
+                        <input
+                            type="color"
+                            value={drawingColor}
+                            onChange={(e) => setDrawingColor(e.target.value)}
+                            style={{ marginTop: '10px' }}
+                        />
+                    </div>
+                    <div className="size-controls">
+                        <input
+                            type="range"
+                            min="1"
+                            max="40"
+                            value={lineWidth}
+                            onChange={(e) => setLineWidth(e.target.value)}
+                            style={{ marginTop: '10px' }}
+                        />
+                    </div>
+                    <div>
+
+                    </div>
                 </div>
                 <div className="button-container">
                     <Button size="small" text="Done"/>
