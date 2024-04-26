@@ -12,12 +12,24 @@ function Canvas({word}) {
     const [lineWidth, setLineWidth] = useState(2);
     const isDrawing = useRef(false);
     const stageRef = useRef(null);
+    const linesRef = useRef([]);
 
     const drawingColorRef = useRef(drawingColor);
     const lineWidthRef = useRef(lineWidth);
 
     drawingColorRef.current = drawingColor;
     lineWidthRef.current = lineWidth;
+
+
+    const handleUndo = () => {
+        const lines = linesRef.current;
+        if (lines.length === 0) return;
+        const lastLine = lines.pop();
+        linesRef.current = lines;
+        lastLine.destroy();
+        const layer = stageRef.current.getStage().children[0];
+        layer.batchDraw();
+    };
 
     useEffect(() => {
         const stage = stageRef.current.getStage();
@@ -35,9 +47,12 @@ function Canvas({word}) {
                 lineCap: 'round',
                 lineJoin: 'round',
                 points: [pos.x, pos.y],
+                className: 'line',
             });
+            linesRef.current = [...linesRef.current, lastLine];
             layer.add(lastLine);
         };
+
 
         const handleMouseMove = () => {
             if (!isDrawing.current) {
@@ -55,15 +70,12 @@ function Canvas({word}) {
             isDrawing.current = false;
         };
 
-        // Listen for mouse events on the stage for drawing.
         stage.on('mousedown touchstart', handleMouseDown);
         stage.on('mousemove touchmove', handleMouseMove);
 
-        // Listen for the mouseup event on the window to handle when the mouse is released outside the canvas.
         window.addEventListener('mouseup', handleMouseUp);
         window.addEventListener('touchend', handleMouseUp);
 
-        // Clean up event listeners when the component unmounts or re-renders.
         return () => {
             stage.off('mousedown touchstart', handleMouseDown);
             stage.off('mousemove touchmove', handleMouseMove);
@@ -101,6 +113,9 @@ function Canvas({word}) {
                             onChange={(e) => setLineWidth(e.target.value)}
                             style={{ marginTop: '10px' }}
                         />
+                    </div>
+                    <div>
+                        <button onClick={handleUndo}>Undo</button>
                     </div>
                     <div>
 
