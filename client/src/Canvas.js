@@ -20,7 +20,6 @@ function Canvas({word}) {
     drawingColorRef.current = drawingColor;
     lineWidthRef.current = lineWidth;
 
-
     const handleUndo = () => {
         const lines = linesRef.current;
         if (lines.length === 0) return;
@@ -52,7 +51,6 @@ function Canvas({word}) {
             linesRef.current = [...linesRef.current, lastLine];
             layer.add(lastLine);
         };
-
 
         const handleMouseMove = () => {
             if (!isDrawing.current) {
@@ -95,34 +93,31 @@ function Canvas({word}) {
                 </Layer>
             </Stage>
             <div className="canvas-control-container">
-                <div className="paint-controls">
-                    <div className="color-controls">
-                        <input
-                            type="color"
-                            value={drawingColor}
-                            onChange={(e) => setDrawingColor(e.target.value)}
-                            style={{ marginTop: '10px' }}
-                        />
-                    </div>
-                    <div className="size-controls">
-                        <input
-                            type="range"
-                            min="1"
-                            max="40"
-                            value={lineWidth}
-                            onChange={(e) => setLineWidth(e.target.value)}
-                            style={{ marginTop: '10px' }}
-                        />
-                    </div>
-                    <div>
-                        <button onClick={handleUndo}>Undo</button>
-                    </div>
-                    <div>
-
-                    </div>
+                <div>
+                    <label>Size</label>
+                    <input
+                        type="range"
+                        min="1"
+                        max="40"
+                        value={lineWidth}
+                        onChange={(e) => setLineWidth(e.target.value)}
+                    />
                 </div>
-                <div className="button-container">
-                    <Button size="small" text="Done"/>
+
+                <div>
+                    <label>Color</label>
+                    <input
+                        type="color"
+                        value={drawingColor}
+                        onChange={(e) => setDrawingColor(e.target.value)}
+                    />
+                </div>
+
+                <div className="paint-controls-container">
+                    <button onClick={handleUndo}>Undo</button>
+                    <button>Clear</button>
+                    <button>Eraser</button>
+                    <button>Pencil</button>
                 </div>
             </div>
         </div>
