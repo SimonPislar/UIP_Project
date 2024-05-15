@@ -1,9 +1,13 @@
 /* App.css */
 .app-container {
+    height: 100vh;
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: flex-start;
-    margin: 16px;
-    height: 100vh;
+    justify-content: center;
+    text-align: center;
+}
+
+h1 {
+    font-size: 6em;
 }
