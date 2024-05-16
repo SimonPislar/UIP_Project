@@ -7,20 +7,19 @@ import {useNavigate} from "react-router-dom";
 
 function App() {
     const [isConnected, setIsConnected] = useState(false);
-    const navigate = useNavigate(); // Hook to navigate programmatically
+    const navigate = useNavigate();
 
     const establishConnection = async () => {
         try {
             const response = await fetch('http://localhost:8080/receiver/ping');
-            const data = await response.json(); // Parse the JSON from the response
+            const data = await response.json();
             console.log(data);
             if (data.success) {
                 console.log('Connection established successfully!');
-                navigate('/sign-in'); // Navigate to the home page
-                setIsConnected(true); // Update state based on your condition
+                navigate('/sign-in');
+                setIsConnected(true);
             } else {
                 console.log('Connection not successful:', data);
-
             }
         } catch (error) {
             console.log(error);
@@ -33,7 +32,7 @@ function App() {
             console.log('Connecting...');
             await establishConnection();
         };
-        connect();
+        connect(); // TODO: handle promise
     }, []);
 
     return (
@@ -51,7 +50,6 @@ function App() {
                     <p>Connection established successfully!</p>
                 </div>
             )}
-            {/* Other components */}
             {/* <Button size="small" text="Small Button"/>
             <Button size="large" text="Large Button"/>
             <Input type="text" placeholder="Enter text here"/>
