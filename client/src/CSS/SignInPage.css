@@ -1,0 +1,47 @@
+.login-container {
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    align-items: center;
+    height: 100vh;
+}
+
+.input-container {
+    padding: 1em;
+}
+
+.help {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.sign-up-link {
+    background: none!important;
+    border: none;
+    padding: 0 0.5em;
+    /*optional*/
+    /*input has OS specific font-family*/
+    color: blue;
+    text-decoration: underline;
+    cursor: pointer;
+    font-size: 16px;
+}
+
+.sign-up-link:active {
+    color: #f90;
+}
+
+.sign-up-help {
+    display: flex;
+
+}
+
+.password-help {
+    display: flex;
+}
+
+p {
+    margin: 0;
+    padding: 0.2em;
+}
