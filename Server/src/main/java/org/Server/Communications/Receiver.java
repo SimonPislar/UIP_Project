@@ -1,5 +1,7 @@
 package org.Server.Communications;
 
+import org.Server.ServerController;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
@@ -9,17 +11,37 @@ import java.util.Map;
 @RequestMapping(path="/receiver") // This means URLs start with /user-controller (after Application path)
 public class Receiver {
 
+    ServerController serverController;
+
+    @Autowired
+    public Receiver(ServerController serverController) {
+        this.serverController = serverController;
+    }
+
     /*
         @Brief: This function is used to log in a user
         @Param: email - The email of the user to be logged in.
         @Param: password - The password of the user to be logged in.
-        @Return: String - Returns "true" if the user is logged in.
+        @Return: Map<String, Object> - Returns a map with the success and message.
+        @Note: Spring's jackson library will automatically convert the map to a JSON object.
+               This is the standard way to return JSON objects in Spring.
      */
     @CrossOrigin(origins = "http://localhost:3000")
-    @GetMapping(path = "login")
-    public String login(@RequestParam (value = "email") String email,
+    @PostMapping(path = "login")
+    public Map<String, Object> login(@RequestParam (value = "email") String email,
                         @RequestParam (value = "password") String password) {
-        return "true";
+        boolean result = serverController.login(email, password);
+        Map<String, Object> response = new HashMap<>();
+
+        if (result) {
+            response.put("success", true);
+            response.put("message", "User logged in");
+        } else {
+            response.put("success", false);
+            response.put("message", "Invalid credentials.");
+        }
+
+        return response;
     }
 
     /*
