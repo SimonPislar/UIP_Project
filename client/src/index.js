@@ -5,6 +5,7 @@ import App from './App';
 import reportWebVitals from './reportWebVitals';
 import {BrowserRouter, Route, Routes} from 'react-router-dom';
 import SignInPage from "./SignInPage";
+import Register from "./Register";
 
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
@@ -13,6 +14,7 @@ root.render(
         <Routes>
             <Route path="/" element={<App />} />
             <Route path="/sign-in" element={<SignInPage/>} />
+            <Route path="/register" element={<Register />} />
         </Routes>
     </BrowserRouter>
 );
