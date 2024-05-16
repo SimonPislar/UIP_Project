@@ -1,9 +1,20 @@
-import React from "react";
+import React, {useState} from "react";
 import Input from "./Input";
 import './CSS/SignInPage.css';
 import Button from "./Button";
 
 function SignInPage() {
+
+    const [username, setUsername] = useState(''); // username is the state variable, setUsername is the function that updates the state variable
+    const [password, setPassword] = useState(''); // password is the state variable, setPassword is the function that updates the state variable
+
+    const handleUsernameChange = (event) => {
+        setUsername(event.target.value);
+    };
+
+    const handlePasswordChange = (event) => {
+        setPassword(event.target.value);
+    };
 
     const handleSignIn = () => {
         console.log("Sign In");
@@ -19,10 +30,10 @@ function SignInPage() {
                 <img src="/img/nopfp.png" alt="pfp" width="200" height="200"></img>
             </div>
             <div className="input-container">
-                <Input type="text" placeholder="Username" />
+                <Input type="text" placeholder="Username" value={username} onChange={handleUsernameChange}/>
             </div>
             <div className="input-container">
-                <Input type="password" placeholder="Password" />
+                <Input type="password" placeholder="Password" value={password} onChange={handlePasswordChange}/>
             </div>
             <div className="input-container">
                 <Button size="small" text="Sign In" onClick={handleSignIn} />
