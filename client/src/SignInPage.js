@@ -49,6 +49,11 @@ function SignInPage() {
         navigate('/register');
     }
 
+    const handleForgotPassword = () => {
+        console.log("Forgot password");
+        navigate(`/forgot-password?email=${encodeURIComponent(email)}`);
+    }
+
     return (
         <div className="login-container">
             <div className="input-container">
@@ -73,7 +78,7 @@ function SignInPage() {
             <div className="input-container help">
                 <div className="sign-up-help">
                     <p>Forgot your password?</p>
-                    <button className="sign-up-link">Reset Password</button>
+                    <button className="sign-up-link" onClick={handleForgotPassword}>Reset Password</button>
                 </div>
                 <div className="password-help">
                     <p>Don't have an account?</p>
