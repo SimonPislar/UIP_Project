@@ -6,14 +6,14 @@ import {useNavigate} from "react-router-dom";
 
 function SignInPage() {
 
-    let displayLoginError = false;
+    const [displayLoginError, setDisplayLoginError] = useState(false);
 
-    const [username, setUsername] = useState(''); // username is the state variable, setUsername is the function that updates the state variable
+    const [email, setEmail] = useState(''); // username is the state variable, setUsername is the function that updates the state variable
     const [password, setPassword] = useState(''); // password is the state variable, setPassword is the function that updates the state variable
     const navigate = useNavigate();
 
-    const handleUsernameChange = (event) => {
-        setUsername(event.target.value);
+    const handleEmailChange = (event) => {
+        setEmail(event.target.value);
     };
 
     const handlePasswordChange = (event) => {
@@ -23,7 +23,7 @@ function SignInPage() {
     const handleSignIn = () => {
         console.log("Sign In");
         const formData = new URLSearchParams();
-        formData.append('username', username);
+        formData.append('email', email);
         formData.append('password', password);
         fetch('http://localhost:8080/receiver/login', {
             method: 'POST',
@@ -31,14 +31,14 @@ function SignInPage() {
             headers: {
                 'Content-Type': 'application/x-www-form-urlencoded'
             }
-        }).then((response) => response.text())
+        }).then((response) => response.json())
             .then((data) => {
-                if (data === "true") {
-                    displayLoginError = false;
+                if (data.success) {
+                    setDisplayLoginError(false);
                     navigate('/home');
                 } else {
-                    console.log("Incorrect username or password");
-                    displayLoginError = true;
+                    console.log(data.message);
+                    setDisplayLoginError(true);
                 }
             }
         );
@@ -55,7 +55,7 @@ function SignInPage() {
                 <img src="/img/nopfp.png" alt="pfp" width="200" height="200"></img>
             </div>
             <div className="input-container">
-                <Input type="text" placeholder="Username" value={username} onChange={handleUsernameChange}/>
+                <Input type="text" placeholder="Email" value={email} onChange={handleEmailChange}/>
             </div>
             <div className="input-container">
                 <Input type="password" placeholder="Password" value={password} onChange={handlePasswordChange}/>
@@ -66,7 +66,7 @@ function SignInPage() {
 
             {displayLoginError && (
                 <div className="input-container error-message">
-                    <p>Incorrect username or password</p>
+                    <p>Incorrect username/password or potential server error</p>
                 </div>
             )}
 
