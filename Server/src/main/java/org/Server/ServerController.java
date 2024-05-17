@@ -32,6 +32,8 @@ public class ServerController {
             if (securityTools.comparePasswords(password, user.getPassword())) {
                 System.out.println("User " + user.getUsername() + " logged in.");
                 result = true;
+            } else {
+                System.out.println("Invalid credentials for user " + user.getUsername() + ".");
             }
         }
         return result;
@@ -46,9 +48,14 @@ public class ServerController {
      */
     public Boolean register(String email, String username, String password) {
         boolean result = false;
-        if (dbController.getUser(email) == null) {
-            dbController.storeUser(email, username, securityTools.encrypt(password));
-            result = true;
+        if (email.length() >= 5 && !username.isEmpty() && !password.isEmpty()) {
+            if (!dbController.userExists(email)) {
+                dbController.storeUser(email, username, securityTools.encrypt(password));
+                System.out.println("User " + username + " registered.");
+                result = true;
+            } else {
+                System.out.println("User " + username + " already exists.");
+            }
         }
         return result;
     }
