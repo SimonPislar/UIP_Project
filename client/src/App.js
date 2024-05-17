@@ -9,6 +9,8 @@ function App() {
     const [isConnected, setIsConnected] = useState(false);
     const navigate = useNavigate();
 
+    const delayInMilliseconds = 2000; //1 second
+
     const establishConnection = async () => {
         try {
             const response = await fetch('http://localhost:8080/receiver/ping');
@@ -16,7 +18,9 @@ function App() {
             console.log(data);
             if (data.success) {
                 console.log('Connection established successfully!');
-                navigate('/sign-in');
+                setTimeout(function() {
+                    navigate('/sign-in');
+                }, delayInMilliseconds);
                 setIsConnected(true);
             } else {
                 console.log('Connection not successful:', data);
