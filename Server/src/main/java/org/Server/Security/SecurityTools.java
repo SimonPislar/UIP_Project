@@ -1,7 +1,6 @@
 package org.Server.Security;
 
 import org.springframework.stereotype.Component;
-import java.util.UUID;
 import org.springframework.security.crypto.argon2.Argon2PasswordEncoder;
 
 @Component
