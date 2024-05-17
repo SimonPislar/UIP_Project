@@ -1,5 +1,6 @@
 package org.Server.Communications;
 
+import jakarta.servlet.http.HttpServletRequest;
 import org.Server.ServerController;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -29,13 +30,13 @@ public class Receiver {
     @CrossOrigin(origins = "http://localhost:3000")
     @PostMapping(path = "login")
     public Map<String, Object> login(@RequestParam (value = "email") String email,
-                        @RequestParam (value = "password") String password) {
+                                     @RequestParam (value = "password") String password) {
         boolean result = serverController.login(email, password);
         Map<String, Object> response = new HashMap<>();
 
         if (result) {
             response.put("success", true);
-            response.put("message", "User logged in");
+            response.put("message", "true");
         } else {
             response.put("success", false);
             response.put("message", "Invalid credentials.");
@@ -64,10 +65,19 @@ public class Receiver {
      */
     @CrossOrigin(origins = "http://localhost:3000")
     @PostMapping(path = "register-account")
-    public void accountRegister(@RequestParam String email,
-                                @RequestParam String username,
-                                @RequestParam String password) {
-
+    public Map<String, Object> accountRegister(@RequestParam (value = "email") String email,
+                                               @RequestParam (value = "username") String username,
+                                               @RequestParam (value = "password") String password) {
+        boolean result = serverController.register(email, username, password);
+        Map<String, Object> response = new HashMap<>();
+        if (result) {
+            response.put("success", true);
+            response.put("message", "true");
+        } else {
+            response.put("success", false);
+            response.put("message", "User already exists.");
+        }
+        return response;
     }
 
     /*
@@ -180,7 +190,8 @@ public class Receiver {
     */
     @CrossOrigin(origins = "http://localhost:3000")
     @GetMapping(path = "ping")
-    public Map<String, Object> ping() {
+    public Map<String, Object> ping(HttpServletRequest request) {
+        System.out.println("Ping received from client at " + System.currentTimeMillis() + " from " + request.getRemoteAddr() + ".");
         Map<String, Object> response = new HashMap<>();
         response.put("success", true);
         response.put("message", "pong");
