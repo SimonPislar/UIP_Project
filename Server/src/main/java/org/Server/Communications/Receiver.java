@@ -1,6 +1,7 @@
 package org.Server.Communications;
 
 import jakarta.servlet.http.HttpServletRequest;
+import org.Server.Game.GameController;
 import org.Server.ServerController;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -13,10 +14,12 @@ import java.util.Map;
 public class Receiver {
 
     ServerController serverController;
+    GameController gameController;
 
     @Autowired
-    public Receiver(ServerController serverController) {
+    public Receiver(ServerController serverController, GameController gameController) {
         this.serverController = serverController;
+        this.gameController = gameController;
     }
 
     /*
@@ -27,7 +30,7 @@ public class Receiver {
         @Note: Spring's jackson library will automatically convert the map to a JSON object.
                This is the standard way to return JSON objects in Spring.
      */
-    @CrossOrigin(origins = "http://localhost:3000")
+    @CrossOrigin(origins = "*")
     @PostMapping(path = "login")
     public Map<String, Object> login(@RequestParam (value = "email") String email,
                                      @RequestParam (value = "password") String password) {
@@ -50,7 +53,7 @@ public class Receiver {
         @Param: email - The email of the user to be logged out.
         @Return: void - Returns nothing.
      */
-    @CrossOrigin(origins = "http://localhost:3000")
+    @CrossOrigin(origins = "*")
     @PostMapping(path = "logout")
     public void logout(@RequestParam String email) {
 
@@ -63,7 +66,7 @@ public class Receiver {
         @Param: password - The password of the user to be registered.
         @Return: void - Returns nothing.
      */
-    @CrossOrigin(origins = "http://localhost:3000")
+    @CrossOrigin(origins = "*")
     @PostMapping(path = "register-account")
     public Map<String, Object> accountRegister(@RequestParam (value = "email") String email,
                                                @RequestParam (value = "username") String username,
@@ -86,7 +89,7 @@ public class Receiver {
         @Param: password - The password of the user to be deleted.
         @Return: String - Returns "deleted" if the user is deleted.
      */
-    @CrossOrigin(origins = "http://localhost:3000")
+    @CrossOrigin(origins = "*")
     @DeleteMapping(path = "delete-account")
     public String deleteAccount(@RequestParam String email,
                                 @RequestParam String password) {
@@ -100,7 +103,7 @@ public class Receiver {
         @Param: password - The password of the user to be updated.
         @Return: String - Returns "updated" if the user is updated.
      */
-    @CrossOrigin(origins = "http://localhost:3000")
+    @CrossOrigin(origins = "*")
     @PostMapping(path = "update-account")
     public String updateAccount(@RequestParam String email,
                                 @RequestParam String username,
@@ -113,7 +116,7 @@ public class Receiver {
         @Param: email - The email of the user to be retrieved.
         @Return: String - Returns the user account.
      */
-    @CrossOrigin(origins = "http://localhost:3000")
+    @CrossOrigin(origins = "*")
     @GetMapping(path = "get-account")
     public String getAccount(@RequestParam String email) {
         return "";
@@ -125,11 +128,23 @@ public class Receiver {
         @Param: lobbyName - The name of the lobby to be created.
         @Return: void - Returns nothing.
      */
-    @CrossOrigin(origins = "http://localhost:3000")
+    @CrossOrigin(origins = "*")
     @PostMapping(path = "create-lobby")
-    public void createLobby(@RequestParam String email,
-                            @RequestParam String lobbyName) {
-
+    public Map<String, Object> createLobby(HttpServletRequest request,
+                            @RequestParam (value = "email") String email,
+                            @RequestParam (value = "lobbyName") String lobbyName,
+                            @RequestParam (value = "playerCount") int playerCount) {
+        String ip = request.getRemoteAddr() + ":" + request.getRemotePort();
+        boolean result = this.gameController.initializeGame(email, lobbyName, 4, ip);
+        Map<String, Object> response = new HashMap<>();
+        if (result) {
+            response.put("success", true);
+            response.put("message", "true");
+        } else {
+            response.put("success", false);
+            response.put("message", "Lobby already exists or player already has active lobby.");
+        }
+        return response;
     }
 
     /*
@@ -138,7 +153,7 @@ public class Receiver {
         @Param: lobbyName - The name of the lobby to be joined.
         @Return: String - Returns nothing.
      */
-    @CrossOrigin(origins = "http://localhost:3000")
+    @CrossOrigin(origins = "*")
     @PostMapping(path = "join-lobby")
     public String joinLobby(@RequestParam String email,
                           @RequestParam String lobbyName) {
@@ -151,7 +166,7 @@ public class Receiver {
         @Param: lobbyName - The name of the lobby to be left.
         @Return: void - Returns nothing.
      */
-    @CrossOrigin(origins = "http://localhost:3000")
+    @CrossOrigin(origins = "*")
     @PostMapping(path = "leave-lobby")
     public void leaveLobby(@RequestParam String email,
                            @RequestParam String lobbyName) {
@@ -164,7 +179,7 @@ public class Receiver {
         @Param: lobbyName - The name of the lobby to start the game.
         @Return: void - Returns nothing.
      */
-    @CrossOrigin(origins = "http://localhost:3000")
+    @CrossOrigin(origins = "*")
     @PostMapping(path = "start-game")
     public void startGame(@RequestParam String email,
                           @RequestParam String lobbyName) {
@@ -177,7 +192,7 @@ public class Receiver {
         @Param: lobbyName - The name of the lobby to end the game.
         @Return: void - Returns nothing.
      */
-    @CrossOrigin(origins = "http://localhost:3000")
+    @CrossOrigin(origins = "*")
     @PostMapping(path = "end-game")
     public void endGame(@RequestParam String email,
                         @RequestParam String lobbyName) {
@@ -188,7 +203,7 @@ public class Receiver {
         @Brief: This function is used to check server status
         @Return: String - Returns "pong".
     */
-    @CrossOrigin(origins = "http://localhost:3000")
+    @CrossOrigin(origins = "*")
     @GetMapping(path = "ping")
     public Map<String, Object> ping(HttpServletRequest request) {
         System.out.println("Ping received from client at " + System.currentTimeMillis() + " from " + request.getRemoteAddr() + ".");
