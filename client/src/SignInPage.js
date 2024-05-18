@@ -25,7 +25,7 @@ function SignInPage() {
         const formData = new URLSearchParams();
         formData.append('email', email);
         formData.append('password', password);
-        fetch('http://localhost:8080/receiver/login', {
+        fetch('http://192.168.0.17:8080/receiver/login', {
             method: 'POST',
             body: formData,
             headers: {
@@ -35,7 +35,7 @@ function SignInPage() {
             .then((data) => {
                 if (data.success) {
                     setDisplayLoginError(false);
-                    navigate('/home');
+                    navigate(`/home?email=${encodeURIComponent(email)}`);
                 } else {
                     console.log(data.message);
                     setDisplayLoginError(true);
