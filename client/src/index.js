@@ -8,6 +8,10 @@ import SignInPage from "./SignInPage";
 import Register from "./Register";
 import Home from "./Home";
 import ForgotPassword from "./ForgotPassword";
+import NewGame from "./NewGame";
+import JoinGame from "./JoinGame";
+import Language from "./Language";
+import Account from "./Account";
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
@@ -18,6 +22,11 @@ root.render(
             <Route path="/register" element={<Register />} />
             <Route path="/home" element={<Home />} />
             <Route path="/forgot-password" element={<ForgotPassword />} />
+            <Route path="/new-game" element={<NewGame />} />
+            <Route path="/join-game" element={<JoinGame />} />
+            <Route path="/language" element={<Language />} />
+            <Route path="/account" element={<Account />} />
+
         </Routes>
     </BrowserRouter>
 );
