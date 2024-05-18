@@ -25,7 +25,7 @@ function Register() {
         formData.append('password', password);
         formData.append('email', email);
 
-        fetch('http://localhost:8080/receiver/register-account', {
+        fetch('http://192.168.0.17:8080/receiver/register-account', {
             method: 'POST',
             body: formData,
             headers: {
