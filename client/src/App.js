@@ -13,7 +13,7 @@ function App() {
 
     const establishConnection = async () => {
         try {
-            const response = await fetch('http://localhost:8080/receiver/ping');
+            const response = await fetch('http://192.168.0.17:8080/receiver/ping');
             const data = await response.json();
             console.log(data);
             if (data.success) {
