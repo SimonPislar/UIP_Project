@@ -4,8 +4,6 @@ import org.Server.DBMS.DBController;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.Server.DBMS.User;
-import org.Server.Game.Drawing;
-import org.Server.Game.Round;
 
 import java.util.ArrayList;
 
@@ -28,11 +26,17 @@ public class GameController {
         @Param: email - The email of the player.
         @Param: sessionName - The name of the session.
     */
-    public void initializeGame(String email, String sessionName, int playerCount, String IP) {
+    public boolean initializeGame(String email, String sessionName, int playerCount, String IP) {
         User user = this.dbController.getUser(email);
         Player player = new Player(user.getUsername(), user.getId(), IP);
+        for (GameSession gameSession : this.activeGameSessions) {
+            if (gameSession.getSessionName().equals(sessionName) || gameSession.getPlayers().get(0).getID() == user.getId()) {
+                return false;
+            }
+        }
         GameSession gameSession = new GameSession(playerCount, player, sessionName);
         this.activeGameSessions.add(gameSession);
+        return true;
     }
 
     /*
