@@ -6,6 +6,11 @@
     height: 100vh;
 }
 
+.new-game-container p {
+    padding: 1em 2em;
+    color: red;
+}
+
 h1 {
     margin: 0;
     padding: 0.5em;
