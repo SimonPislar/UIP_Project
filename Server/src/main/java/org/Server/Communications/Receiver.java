@@ -132,19 +132,41 @@ public class Receiver {
     @PostMapping(path = "create-lobby")
     public Map<String, Object> createLobby(HttpServletRequest request,
                             @RequestParam (value = "email") String email,
-                            @RequestParam (value = "lobbyName") String lobbyName,
+                            @RequestParam (value = "gameName") String lobbyName,
                             @RequestParam (value = "playerCount") int playerCount) {
         String ip = request.getRemoteAddr() + ":" + request.getRemotePort();
-        boolean result = this.gameController.initializeGame(email, lobbyName, 4, ip);
+        boolean result = this.gameController.initializeGame(email, lobbyName, playerCount, ip);
         Map<String, Object> response = new HashMap<>();
         if (result) {
             response.put("success", true);
-            response.put("message", "true");
+            response.put("message", lobbyName);
         } else {
             response.put("success", false);
             response.put("message", "Lobby already exists or player already has active lobby.");
         }
         return response;
+    }
+
+    /*
+        @Brief: This function is used to get the player's lobby
+        @Param: email - The email of the user to get the lobby.
+        @Return: Map<String, Object> - Returns the player's lobby.
+     */
+    @CrossOrigin(origins = "*")
+    @PostMapping(path = "get-player-lobby")
+    public Map<String, Object> getPlayerLobby(@RequestParam (value = "email") String email) {
+        String lobbyName = this.gameController.getGameSessionName(email);
+        System.out.println("Lobby name: " + lobbyName);
+        Map<String, Object> response = new HashMap<>();
+        if (lobbyName != null) {
+            response.put("success", true);
+            response.put("message", lobbyName);
+            return response;
+        } else {
+            response.put("success", false);
+            response.put("message", "No lobby found.");
+            return response;
+        }
     }
 
     /*
