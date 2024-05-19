@@ -13,6 +13,8 @@ function NewGame() {
     const [selectedDropDownNumber, setSelectedDropDownNumber] = useState('');
     const [checked, setChecked] = useState(false);
     const [gameName, setGameName] = useState('');
+    const [displayServerError, setDisplayServerError] = useState(false);
+    const [serverErrorMessage, setServerErrorMessage] = useState('');
 
     const navigate = useNavigate();
 
@@ -49,6 +51,8 @@ function NewGame() {
                     navigate(`/lobby?email=${encodeURIComponent(email)}`);
                 } else {
                     console.log(data.message);
+                    setServerErrorMessage(data.message);
+                    setDisplayServerError(true);
                 }
         })
     }
@@ -76,6 +80,7 @@ function NewGame() {
             <div className="item-container">
                 <Button size="small" text="Create game" onClick={handleCreateGame}/>
             </div>
+            {displayServerError && <p>{serverErrorMessage}</p>}
         </div>
     )
 }
