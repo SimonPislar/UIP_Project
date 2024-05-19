@@ -36,6 +36,7 @@ public class GameController {
         }
         GameSession gameSession = new GameSession(playerCount, player, sessionName);
         this.activeGameSessions.add(gameSession);
+        System.out.println("Game session created: " + sessionName + " with " + playerCount + " players.");
         return true;
     }
 
@@ -56,6 +57,20 @@ public class GameController {
         for (GameSession gameSession : this.activeGameSessions) {
             if (gameSession.getSessionName().equals(sessionName)) {
                 return gameSession;
+            }
+        }
+        return null;
+    }
+
+    /*
+        @Brief: This function is used to get the game session that a player is a part of.
+        @Param: email - The email of the player.
+        @Return: String - Returns the name of the game session.
+    */
+    public String getGameSessionName(String email) {
+        for (GameSession gameSession : this.activeGameSessions) {
+            if (gameSession.getPlayers().get(0).getID() == this.dbController.getUser(email).getId()) {
+                return gameSession.getSessionName();
             }
         }
         return null;
