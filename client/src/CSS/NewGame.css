@@ -1,0 +1,42 @@
+.new-game-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    height: 100vh;
+}
+
+h1 {
+    margin: 0;
+    padding: 0.5em;
+}
+
+.drop-down-container {
+    padding: 0.5em;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+}
+
+.drop-down {
+    width: 14em;
+    font-size: 20px;
+}
+
+.drop-down option {
+    font-size: 20px;
+}
+
+.check-box-container {
+    padding-bottom: 0.5em;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 20px;
+}
+
+.check-box {
+    width: 1.5em;
+    height: 1.5em;
+}
