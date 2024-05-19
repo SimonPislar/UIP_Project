@@ -12,6 +12,7 @@ import NewGame from "./NewGame";
 import JoinGame from "./JoinGame";
 import Language from "./Language";
 import Account from "./Account";
+import Lobby from "./Lobby";
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
@@ -26,6 +27,7 @@ root.render(
             <Route path="/join-game" element={<JoinGame />} />
             <Route path="/language" element={<Language />} />
             <Route path="/account" element={<Account />} />
+            <Route path="lobby" element={<Lobby />} />
 
         </Routes>
     </BrowserRouter>
