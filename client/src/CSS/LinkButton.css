@@ -1,0 +1,26 @@
+.sign-up-link {
+    background: none!important;
+    border: none;
+    padding: 0 0.5em;
+    /*optional*/
+    /*input has OS specific font-family*/
+    color: blue;
+    text-decoration: underline;
+    cursor: pointer;
+}
+
+.sign-up-link.medium {
+    font-size: 24px;
+}
+
+.sign-up-link.small {
+    font-size: 16px;
+}
+
+.sign-up-link.large {
+    font-size: 32px;
+}
+
+.sign-up-link:active {
+    color: #f90;
+}
