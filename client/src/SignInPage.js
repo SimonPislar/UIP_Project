@@ -3,6 +3,7 @@ import Input from "./Input";
 import './CSS/SignInPage.css';
 import Button from "./Button";
 import {useNavigate} from "react-router-dom";
+import LinkButton from "./LinkButton";
 
 function SignInPage() {
 
@@ -78,11 +79,11 @@ function SignInPage() {
             <div className="input-container help">
                 <div className="sign-up-help">
                     <p>Forgot your password?</p>
-                    <button className="sign-up-link" onClick={handleForgotPassword}>Reset Password</button>
+                    <LinkButton size="small" text="Reset password" onClick={handleForgotPassword}/>
                 </div>
                 <div className="password-help">
                     <p>Don't have an account?</p>
-                    <button className="sign-up-link" onClick={handleSignUp}>Sign Up</button>
+                    <LinkButton size="small" text="Sign Up" onClick={handleSignUp}/>
                 </div>
             </div>
         </div>
