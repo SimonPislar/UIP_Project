@@ -16,22 +16,6 @@
     align-items: center;
 }
 
-.sign-up-link {
-    background: none!important;
-    border: none;
-    padding: 0 0.5em;
-    /*optional*/
-    /*input has OS specific font-family*/
-    color: blue;
-    text-decoration: underline;
-    cursor: pointer;
-    font-size: 16px;
-}
-
-.sign-up-link:active {
-    color: #f90;
-}
-
 .sign-up-help {
     display: flex;
 
