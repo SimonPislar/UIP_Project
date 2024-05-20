@@ -25,6 +25,12 @@ h1 {
     padding: 0.5em;
 }
 
+.tutorial-container {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+}
+
 @media (max-width: 620px) {
     h1 {
         font-size: 3.5em;
