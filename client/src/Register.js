@@ -62,7 +62,7 @@ function Register() {
 
     return (
         <div className="register-container">
-            <div className="img-container">
+            <div>
                 <img src="/img/nopfp.png" alt="pfp" width="200" height="200"></img>
             </div>
             <div className="row-container">
