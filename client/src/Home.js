@@ -2,6 +2,7 @@ import React from 'react';
 import './CSS/Home.css';
 import Button from "./Button";
 import {useLocation, useNavigate} from "react-router-dom";
+import LinkButton from "./LinkButton";
 
 function Home() {
 
@@ -31,10 +32,18 @@ function Home() {
         navigate(`/account?email=${encodeURIComponent(email)}`)
     }
 
+    const handleTutorial = () => {
+        console.log("Tutorial")
+    }
+
+    // <LinkButton text="Tutorial" link="https://www.youtube.com/watch?v=dQw4w9WgXcQ"/> Rick Rolled by Copilot X_X
     return (
         <div className="home-container">
             <div className="img-container">
                 <img src="/img/nopfp.png" alt="pfp" width="70" height="70" onClick={handleShowAccount}></img>
+            </div>
+            <div className="tutorial-container">
+                <LinkButton size="medium" text="Don't know how to play?" onClick={handleTutorial}/>
             </div>
             <div className="home-menu-container">
                 <div className="button-container">
