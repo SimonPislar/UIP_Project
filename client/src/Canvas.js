@@ -1,13 +1,13 @@
-import React, {useRef, useEffect, useState} from 'react';
-import { Stage, Layer, Rect } from 'react-konva';
-import Konva from "konva";
+import React, { useRef, useEffect, useState } from 'react';
+import { Stage, Layer, Rect, Line } from 'react-konva';
+import Konva from 'konva';
 import './CSS/Canvas.css';
-import Button from "./Button";
+import Button from './Button';
 
 const CanvasWidth = 1000;
 const CanvasHeight = 550;
 
-function Canvas({word}) {
+function Canvas({ word }) {
     const [drawingColor, setDrawingColor] = useState('#000000');
     const [lineWidth, setLineWidth] = useState(2);
     const isDrawing = useRef(false);
@@ -26,14 +26,34 @@ function Canvas({word}) {
         const lastLine = lines.pop();
         linesRef.current = lines;
         lastLine.destroy();
-        const layer = stageRef.current.getStage().children[0];
+        const layer = stageRef.current.getStage().children[1];
+        layer.batchDraw();
+    };
+
+    const handleClear = () => {
+        const layer = stageRef.current.getStage().children[1];
+        layer.destroyChildren();
+        linesRef.current = [];
         layer.batchDraw();
     };
 
     useEffect(() => {
         const stage = stageRef.current.getStage();
-        const layer = new Konva.Layer();
-        stage.add(layer);
+        const backgroundLayer = new Konva.Layer();
+        const drawingLayer = new Konva.Layer();
+        stage.add(backgroundLayer);
+        stage.add(drawingLayer);
+
+        const backgroundRect = new Konva.Rect({
+            x: 0,
+            y: 0,
+            width: CanvasWidth,
+            height: CanvasHeight,
+            fill: 'white',
+        });
+        backgroundLayer.add(backgroundRect);
+        backgroundLayer.batchDraw();
+
         let lastLine;
 
         const handleMouseDown = () => {
@@ -46,10 +66,9 @@ function Canvas({word}) {
                 lineCap: 'round',
                 lineJoin: 'round',
                 points: [pos.x, pos.y],
-                className: 'line',
             });
             linesRef.current = [...linesRef.current, lastLine];
-            layer.add(lastLine);
+            drawingLayer.add(lastLine);
         };
 
         const handleMouseMove = () => {
@@ -61,7 +80,7 @@ function Canvas({word}) {
             lastLine.points(newPoints);
             lastLine.stroke(drawingColorRef.current);
             lastLine.strokeWidth(lineWidthRef.current);
-            layer.batchDraw();
+            drawingLayer.batchDraw();
         };
 
         const handleMouseUp = () => {
@@ -88,9 +107,12 @@ function Canvas({word}) {
                 <h1>Draw the word: {word}</h1>
             </div>
             <Stage width={CanvasWidth} height={CanvasHeight} ref={stageRef}>
+                {/* Background Layer */}
                 <Layer>
-                    <Rect x={0} y={0} width={CanvasWidth} height={CanvasHeight} fill="white"/>
+                    <Rect x={0} y={0} width={CanvasWidth} height={CanvasHeight} fill="white" />
                 </Layer>
+                {/* Drawing Layer */}
+                <Layer />
             </Stage>
             <div className="canvas-control-container">
                 <div>
@@ -103,7 +125,6 @@ function Canvas({word}) {
                         onChange={(e) => setLineWidth(e.target.value)}
                     />
                 </div>
-
                 <div>
                     <label>Color</label>
                     <input
@@ -112,16 +133,14 @@ function Canvas({word}) {
                         onChange={(e) => setDrawingColor(e.target.value)}
                     />
                 </div>
-
                 <div className="paint-controls-container">
                     <button onClick={handleUndo}>Undo</button>
-                    <button>Clear</button>
+                    <button onClick={handleClear}>Clear</button>
                     <button>Eraser</button>
                     <button>Pencil</button>
                 </div>
             </div>
         </div>
-
     );
 }
 
