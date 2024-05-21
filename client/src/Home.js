@@ -36,7 +36,6 @@ function Home() {
         console.log("Tutorial")
     }
 
-    // <LinkButton text="Tutorial" link="https://www.youtube.com/watch?v=dQw4w9WgXcQ"/> Rick Rolled by Copilot X_X
     return (
         <div className="home-container">
             <div className="img-container">
