@@ -54,10 +54,6 @@ function App() {
                     <p>Connection established successfully!</p>
                 </div>
             )}
-            {/* <Button size="small" text="Small Button"/>
-            <Button size="large" text="Large Button"/>
-            <Input type="text" placeholder="Enter text here"/>
-            <Canvas/> */}
         </div>
     );
 }
