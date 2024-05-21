@@ -68,9 +68,26 @@ public class GameController {
         @Return: String - Returns the name of the game session.
     */
     public String getGameSessionName(String email) {
+        User user = this.dbController.getUser(email);
         for (GameSession gameSession : this.activeGameSessions) {
-            if (gameSession.getPlayers().get(0).getID() == this.dbController.getUser(email).getId()) {
-                return gameSession.getSessionName();
+            for (Player player : gameSession.getPlayers()) {
+                if (player.getID() == user.getId()) {
+                    return gameSession.getSessionName();
+                }
+            }
+        }
+        return null;
+    }
+
+    public ArrayList<String> getPlayersInGameSession(String sessionName) {
+        ArrayList<GameSession> activeGameSessions = getActiveGameSessions();
+        for (GameSession gs : activeGameSessions) {
+            if (gs.getSessionName().equals(sessionName)) {
+                ArrayList<String> players = new ArrayList<>();
+                for (Player p : gs.getPlayers()) {
+                    players.add(p.getName());
+                }
+                return players;
             }
         }
         return null;
@@ -82,11 +99,26 @@ public class GameController {
         @Param: IP - The IP of the player.
         @Param: sessionName - The name of the session.
     */
-    public void addPlayerToGameSession(String email, String sessionName, String IP) {
+    public boolean addPlayerToGameSession(String email, String sessionName, String IP) {
         User user = this.dbController.getUser(email);
         Player player = new Player(user.getUsername(), user.getId(), IP);
+        ArrayList<GameSession> activeGameSessions = getActiveGameSessions();
+        for (GameSession gs : activeGameSessions) {
+            for (Player p : gs.getPlayers()) {
+                if (p.getID() == player.getID()) {
+                    return false;
+                }
+            }
+        }
         GameSession gameSession = getGameSession(sessionName);
+        if (gameSession == null) {
+            return false;
+        }
+        if (gameSession.getPlayers().size() == gameSession.getPlayerCount()) {
+            return false;
+        }
         gameSession.appendPlayer(player);
+        return true;
     }
 
     /*
