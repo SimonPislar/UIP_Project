@@ -1,0 +1,35 @@
+.join-game-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+}
+
+.lobby-list-container {
+    background-color: white;
+    border-radius: 1em;
+    padding: 1em;
+    width: 30em;
+    overflow-y: auto;
+    box-shadow: 0 0.4em 0.8em rgba(0, 0, 0, 0.1);
+}
+
+.lobby-item {
+    padding: 0.7em;
+    cursor: pointer;
+    border-radius: 0.5em;
+    transition: background-color 0.2s;
+}
+
+.lobby-item:hover {
+    background-color: #f0f0f0;
+}
+
+.selected {
+    background-color: #d1e7fd;
+}
+
+.join-button-container {
+    padding: 2em;
+}
