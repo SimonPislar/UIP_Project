@@ -60,4 +60,12 @@ public class ServerController {
         return result;
     }
 
+    /*
+        @Brief: This function is used to get the user by email
+        @Param: email - The email of the user to be retrieved.
+        @Return: User - Returns the user.
+     */
+    public User getUser(String email) {
+        return dbController.getUser(email);
+    }
 }
