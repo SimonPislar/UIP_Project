@@ -27,7 +27,7 @@ root.render(
             <Route path="/join-game" element={<JoinGame />} />
             <Route path="/language" element={<Language />} />
             <Route path="/account" element={<Account />} />
-            <Route path="lobby" element={<Lobby />} />
+            <Route path="/lobby" element={<Lobby />} />
 
         </Routes>
     </BrowserRouter>
