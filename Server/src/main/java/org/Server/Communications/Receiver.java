@@ -2,10 +2,12 @@ package org.Server.Communications;
 
 import jakarta.servlet.http.HttpServletRequest;
 import org.Server.Game.GameController;
+import org.Server.Game.GameSession;
 import org.Server.ServerController;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -156,17 +158,66 @@ public class Receiver {
     @PostMapping(path = "get-player-lobby")
     public Map<String, Object> getPlayerLobby(@RequestParam (value = "email") String email) {
         String lobbyName = this.gameController.getGameSessionName(email);
-        System.out.println("Lobby name: " + lobbyName);
+        System.out.println("Lobby name for player with email " + email + ": " + lobbyName);
         Map<String, Object> response = new HashMap<>();
         if (lobbyName != null) {
+            if (this.gameController.getGameSession(lobbyName).getPlayers().get(0).getID() == this.serverController.getUser(email).getId()) {
+                response.put("isHost", true);
+            } else {
+                response.put("isHost", false);
+            }
             response.put("success", true);
             response.put("message", lobbyName);
-            return response;
         } else {
             response.put("success", false);
             response.put("message", "No lobby found.");
+            response.put("isHost", false);
+        }
+        return response;
+    }
+
+    @CrossOrigin(origins = "*")
+    @PostMapping(path = "get-lobby-players")
+    public Map<String, Object> getLobbyPlayers(@RequestParam (value = "gameName") String gameName) {
+        ArrayList<String> players = this.gameController.getPlayersInGameSession(gameName);
+        if (players == null) {
+            Map<String, Object> response = new HashMap<>();
+            response.put("success", false);
+            response.put("message", "Lobby does not exist.");
             return response;
         }
+        String[] playersArray = players.toArray(new String[0]);
+        Map<String, Object> response = new HashMap<>();
+        response.put("success", true);
+        response.put("message", playersArray);
+        return response;
+    }
+
+    /*
+        @Brief: This function is used to get the lobbies
+        @Return: Map<String, Object> - Returns the lobbies.
+     */
+    @CrossOrigin(origins = "*")
+    @GetMapping(path = "get-lobbies")
+    public Map<String, Object> getLobbies() {
+        ArrayList<GameSession> lobbies = this.gameController.getActiveGameSessions();
+        if (lobbies == null) {
+            Map<String, Object> response = new HashMap<>();
+            response.put("success", false);
+            response.put("message", "No lobbies found.");
+            return response;
+        }
+        ArrayList<String> lobbyNames = new ArrayList<>();
+
+        for (GameSession lobby : lobbies) {
+            lobbyNames.add(lobby.getSessionName());
+        }
+        System.out.println("Lobbies: " + lobbyNames.toString());
+        String[] lobbyNamesArray = lobbyNames.toArray(new String[0]);
+        Map<String, Object> response = new HashMap<>();
+        response.put("success", true);
+        response.put("message", lobbyNamesArray);
+        return response;
     }
 
     /*
@@ -177,9 +228,21 @@ public class Receiver {
      */
     @CrossOrigin(origins = "*")
     @PostMapping(path = "join-lobby")
-    public String joinLobby(@RequestParam String email,
-                          @RequestParam String lobbyName) {
-        return "";
+    public Map<String, Object> joinLobby(HttpServletRequest request,
+                            @RequestParam (value = "email") String email,
+                            @RequestParam (value = "gameName") String gameName) {
+        String IP = request.getRemoteAddr() + ":" + request.getRemotePort();
+        boolean result = gameController.addPlayerToGameSession(email, gameName, IP);
+        if (!result) {
+            Map<String, Object> response = new HashMap<>();
+            response.put("success", false);
+            response.put("message", "Lobby does not exist, player is already in a lobby or lobby full.");
+            return response;
+        }
+        Map<String, Object> response = new HashMap<>();
+        response.put("success", true);
+        response.put("message", "Joined lobby " + gameName + ".");
+        return response;
     }
 
     /*
