@@ -6,6 +6,9 @@ import org.springframework.stereotype.Component;
 
 import org.Server.DBMS.DBController;
 import org.Server.DBMS.User;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
 @Component
 public class ServerController {
@@ -13,10 +16,21 @@ public class ServerController {
     DBController dbController;
     SecurityTools securityTools;
 
+    private final ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(4);
+
     @Autowired
     public ServerController(DBController dbController, SecurityTools securityTools) {
         this.dbController = dbController;
         this.securityTools = securityTools;
+    }
+
+    /*
+        @Brief: This function is used to schedule an asynchronous task.
+        @Param: task - The task to be scheduled.
+        @Param: delay - The delay in seconds.
+    */
+    public void scheduleAsyncTask(Runnable task, int delay) {
+        scheduler.schedule(task, delay, TimeUnit.SECONDS);
     }
 
     /*
