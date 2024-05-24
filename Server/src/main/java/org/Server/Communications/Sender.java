@@ -26,4 +26,9 @@ public class Sender {
         webSocketHandler.handleTextMessage(null, new TextMessage("{\"message\":\"Start\", \"email\":\"" + email + "\"}"));
     }
 
+    public void sendMessageToUser(String email, String messageContent) throws IOException {
+        TextMessage message = new TextMessage(messageContent);
+        webSocketHandler.sendMessageToUser(email, message);
+        System.out.println("Message sent to " + email + ": " + messageContent);
+    }
 }
