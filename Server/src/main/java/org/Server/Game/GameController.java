@@ -1,24 +1,28 @@
 package org.Server.Game;
 
-import org.Server.DBMS.DBController;
+import org.Server.Communications.Sender;
+import org.Server.ServerController;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.Server.DBMS.User;
 
+import java.io.IOException;
 import java.util.ArrayList;
 
 @Component
 public class GameController {
 
-    private final DBController dbController;
+    private final ServerController serverController;
     private final ArrayList<GameSession> activeGameSessions;
     private final ArrayList<GameSession> inactiveGameSessions;
+    private final Sender sender;
 
     @Autowired
-    public GameController(DBController dbController) {
-        this.dbController = dbController;
+    public GameController(ServerController serverController, Sender sender) {
         this.activeGameSessions = new ArrayList<>();
         this.inactiveGameSessions = new ArrayList<>();
+        this.serverController = serverController;
+        this.sender = sender;
     }
 
     /*
@@ -26,9 +30,9 @@ public class GameController {
         @Param: email - The email of the player.
         @Param: sessionName - The name of the session.
     */
-    public boolean initializeGame(String email, String sessionName, int playerCount, String IP) {
-        User user = this.dbController.getUser(email);
-        Player player = new Player(user.getUsername(), user.getId(), IP);
+    public boolean initializeGame(String email, String sessionName, int playerCount) {
+        User user = this.serverController.getUser(email);
+        Player player = new Player(user.getUsername(), user.getId(), email);
         for (GameSession gameSession : this.activeGameSessions) {
             if (gameSession.getSessionName().equals(sessionName) || gameSession.getPlayers().get(0).getID() == user.getId()) {
                 return false;
@@ -68,7 +72,7 @@ public class GameController {
         @Return: String - Returns the name of the game session.
     */
     public String getGameSessionName(String email) {
-        User user = this.dbController.getUser(email);
+        User user = this.serverController.getUser(email);
         for (GameSession gameSession : this.activeGameSessions) {
             for (Player player : gameSession.getPlayers()) {
                 if (player.getID() == user.getId()) {
@@ -99,9 +103,9 @@ public class GameController {
         @Param: IP - The IP of the player.
         @Param: sessionName - The name of the session.
     */
-    public boolean addPlayerToGameSession(String email, String sessionName, String IP) {
-        User user = this.dbController.getUser(email);
-        Player player = new Player(user.getUsername(), user.getId(), IP);
+    public boolean addPlayerToGameSession(String email, String sessionName) {
+        User user = this.serverController.getUser(email);
+        Player player = new Player(user.getUsername(), user.getId(), email);
         ArrayList<GameSession> activeGameSessions = getActiveGameSessions();
         for (GameSession gs : activeGameSessions) {
             for (Player p : gs.getPlayers()) {
@@ -127,7 +131,7 @@ public class GameController {
         @Param: sessionName - The name of the session.
     */
     public void removePlayerFromGameSession(String email, String sessionName) {
-        User user = this.dbController.getUser(email);
+        User user = this.serverController.getUser(email);
         this.activeGameSessions.forEach(gameSession -> {
             if (gameSession.getSessionName().equals(sessionName)) {
                 gameSession.getPlayers().removeIf(player -> player.getID() == user.getId());
@@ -146,5 +150,54 @@ public class GameController {
                 gameSession.setPlayerCount(playerCount);
             }
         });
+    }
+
+    private void prepareGame(GameSession gameSession) {
+        gameSession.setGameOrder();
+        for (int i = 0; i < gameSession.getPlayerCount(); i++) {
+            Word originalWord = gameSession.getOriginalWords().get(i);
+            SketchBook sketchBook = new SketchBook(originalWord.getAuthorEmail(), originalWord.getWord());
+            System.out.println("Sketchbook created for " + originalWord.getAuthorEmail() + " with word " + originalWord.getWord());
+            gameSession.getGameOrder().forEach(player -> {
+                if (player.getEmail().equals(originalWord.getAuthorEmail())) {
+                    System.out.println("Setting sketchbook for " + player.getEmail());
+                    player.setSketchBook(sketchBook);
+                }
+            });
+        }
+        gameSession.rotateSketchBooks();
+
+        // Use CompletableFuture to send messages asynchronously
+        for (Player player : gameSession.getPlayers()) {
+            String playerEmail = player.getEmail();
+            String originalWord = player.getSketchBook().getOriginalWord();
+            String messageContent = String.format("{\"message\":\"OriginalWord\", \"word\":\"%s\"}", originalWord);
+            try {
+                sender.sendMessageToUser(playerEmail, messageContent);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    /*
+        @Brief: This function is used to add a original word to the game session.
+        @Param: sessionName - The name of the session.
+        @Param: word - The word to be added.
+        @Param: email - The email of the player.
+        @Return: boolean - Returns true if the word was added, false otherwise.
+     */
+    public boolean addWord(String wordToAdd, String gameSessionName, String email) {
+        Word word = new Word(email, wordToAdd);
+        GameSession gameSession = getGameSession(gameSessionName);
+        if (gameSession.getPlayerCount() == gameSession.getOriginalWords().size()) {
+            return false;
+        }
+        gameSession.addOriginalWord(word);
+        if (gameSession.getPlayers().size() == gameSession.getOriginalWords().size()) { // All players have added their words
+            Runnable gameStarter = () -> prepareGame(gameSession);
+            serverController.scheduleAsyncTask(gameStarter, 2);
+        }
+        return true;
     }
 }
