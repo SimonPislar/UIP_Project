@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from "react";
-import { useLocation } from "react-router-dom";
+import {useLocation, useNavigate} from "react-router-dom";
 import './CSS/Lobby.css';
 import Button from "./Button";
+import useWebSocket from "react-use-websocket";
 
 function Lobby() {
 
@@ -12,6 +13,14 @@ function Lobby() {
     const [lobbyFetched, setLobbyFetched] = useState(false);
     const [players, setPlayers] = useState([]);
     const [isHost, setIsHost] = useState(false);
+
+    const WS_URL = 'ws://192.168.0.17:8080/ws';
+
+    const {sendJsonMessage, lastJsonMessage} = useWebSocket(WS_URL, {
+        queryParams: { email: email }
+    });
+
+    const navigate = useNavigate();
 
     useEffect(() => {
         console.log("Lobby mounted")
@@ -55,7 +64,24 @@ function Lobby() {
                 }
             }
         );
+
     }, []);
+
+    const handleStart = () => {
+        console.log("Start button clicked");
+        sendJsonMessage({
+            message: 'Start',
+            email: email
+        });
+    }
+
+    if (lastJsonMessage) {
+        console.log(lastJsonMessage);
+        if (lastJsonMessage.message === 'Start') {
+            console.log("Received Start message");
+            navigate(`/word-input?email=${encodeURIComponent(email)}`);
+        }
+    }
 
     return (
         <div className="lobby-container">
@@ -74,7 +100,7 @@ function Lobby() {
             <div className="buttons-container">
                 <Button size="small" text="Leave" onClick={() => console.log("Leave")} /> {/* Implement Leave button */}
                 {isHost &&
-                    <Button size="small" text="Start" onClick={() => console.log("Start")} /> /* Implement Start button */
+                    <Button size="small" text="Start" onClick={handleStart} /> /* Implement Start button */
                 }
             </div>
         </div>
