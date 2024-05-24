@@ -11,9 +11,11 @@ function App() {
 
     const delayInMilliseconds = 2000; //1 second
 
+    const IP = 'http://192.168.0.17:8080'
+
     const establishConnection = async () => {
         try {
-            const response = await fetch('http://192.168.0.17:8080/receiver/ping');
+            const response = await fetch(IP + '/receiver/ping');
             const data = await response.json();
             console.log(data);
             if (data.success) {

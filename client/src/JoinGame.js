@@ -11,8 +11,10 @@ function JoinGame() {
     const queryParams = new URLSearchParams(location.search);
     const email = queryParams.get('email');
 
+    const IP = 'http://192.168.0.17:8080'
+
     const getLobbies = async () => {
-        const response = await fetch('http://192.168.0.17:8080/receiver/get-lobbies');
+        const response = await fetch(IP + '/receiver/get-lobbies');
         const data = await response.json();
         if (data.success) {
             setLobbies(data.message);
@@ -24,7 +26,7 @@ function JoinGame() {
     const checkPlayerInLobby = async () => {
         const formData = new URLSearchParams();
         formData.append('email', email);
-        fetch('http://192.168.0.17:8080/receiver/get-player-lobby', {
+        fetch(IP + '/receiver/get-player-lobby', {
             method: 'POST',
             body: formData,
             headers: {
@@ -56,7 +58,7 @@ function JoinGame() {
             const formData = new URLSearchParams();
             formData.append('email', email);
             formData.append('gameName', selectedLobby);
-            fetch('http://192.168.0.17:8080/receiver/join-lobby', {
+            fetch(IP + '/receiver/join-lobby', {
                 method: 'POST',
                 body: formData,
                 headers: {

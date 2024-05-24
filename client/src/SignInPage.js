@@ -13,6 +13,8 @@ function SignInPage() {
     const [password, setPassword] = useState(''); // password is the state variable, setPassword is the function that updates the state variable
     const navigate = useNavigate();
 
+    const IP = 'http://192.168.0.17:8080'
+
     const handleEmailChange = (event) => {
         setEmail(event.target.value);
     };
@@ -26,7 +28,7 @@ function SignInPage() {
         const formData = new URLSearchParams();
         formData.append('email', email);
         formData.append('password', password);
-        fetch('http://192.168.0.17:8080/receiver/login', {
+        fetch(IP + '/receiver/login', {
             method: 'POST',
             body: formData,
             headers: {

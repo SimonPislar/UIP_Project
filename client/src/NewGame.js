@@ -16,6 +16,8 @@ function NewGame() {
     const [displayServerError, setDisplayServerError] = useState(false);
     const [serverErrorMessage, setServerErrorMessage] = useState('');
 
+    const IP = 'http://192.168.0.17:8080'
+
     const navigate = useNavigate();
 
     const handleDropDownChange = (event) => {
@@ -37,7 +39,7 @@ function NewGame() {
         formData.append('gameName', gameName);
         formData.append('playerCount', selectedDropDownNumber);
         formData.append('customWords', checked.toString());
-        fetch('http://192.168.0.17:8080/receiver/create-lobby', {
+        fetch(IP + '/receiver/create-lobby', {
             method: 'POST',
             body: formData,
             headers: {

@@ -13,6 +13,8 @@ function Register() {
     const [displayPasswordError, setDisplayPasswordError] = useState(false);
     const navigate = useNavigate();
 
+    const IP = 'http://192.168.0.17:8080'
+
     const handleRegister = () => {
         console.log("Register");
         setDisplayPasswordError(false);
@@ -25,7 +27,7 @@ function Register() {
         formData.append('password', password);
         formData.append('email', email);
 
-        fetch('http://192.168.0.17:8080/receiver/register-account', {
+        fetch(IP + '/receiver/register-account', {
             method: 'POST',
             body: formData,
             headers: {
