@@ -1,19 +1,31 @@
 package org.Server.Game;
 
-import java.util.UUID;
-
 public class Player {
 
     final private String name;
     private int points;
     final private int ID;
-    private final String IP;
+    private SketchBook sketchBook;
+    private final String email;
 
-    public Player(String name, int ID, String IP) {
+    public Player(String name, int ID, String email) {
         this.name = name;
         this.points = 0;
         this.ID = ID;
-        this.IP = IP;
+        this.sketchBook = null;
+        this.email = email;
+    }
+
+    public String getEmail() {
+        return this.email;
+    }
+
+    public void setSketchBook(SketchBook sketchBook) {
+        this.sketchBook = sketchBook;
+    }
+
+    public SketchBook getSketchBook() {
+        return this.sketchBook;
     }
 
     /*
@@ -56,11 +68,4 @@ public class Player {
         this.points = 0;
     }
 
-    /*
-        @Brief: This function is used to get the IP of the player.
-        @Return: String - Returns the IP of the player.
-     */
-    public String getIP() {
-        return this.IP;
-    }
 }
