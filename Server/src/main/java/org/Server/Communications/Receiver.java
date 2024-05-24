@@ -137,7 +137,7 @@ public class Receiver {
                             @RequestParam (value = "gameName") String lobbyName,
                             @RequestParam (value = "playerCount") int playerCount) {
         String ip = request.getRemoteAddr() + ":" + request.getRemotePort();
-        boolean result = this.gameController.initializeGame(email, lobbyName, playerCount, ip);
+        boolean result = this.gameController.initializeGame(email, lobbyName, playerCount);
         Map<String, Object> response = new HashMap<>();
         if (result) {
             response.put("success", true);
@@ -232,7 +232,7 @@ public class Receiver {
                             @RequestParam (value = "email") String email,
                             @RequestParam (value = "gameName") String gameName) {
         String IP = request.getRemoteAddr() + ":" + request.getRemotePort();
-        boolean result = gameController.addPlayerToGameSession(email, gameName, IP);
+        boolean result = gameController.addPlayerToGameSession(email, gameName);
         if (!result) {
             Map<String, Object> response = new HashMap<>();
             response.put("success", false);
@@ -258,30 +258,21 @@ public class Receiver {
 
     }
 
-    /*
-        @Brief: This function is used to start a game
-        @Param: email - The email of the user to start the game.
-        @Param: lobbyName - The name of the lobby to start the game.
-        @Return: void - Returns nothing.
-     */
     @CrossOrigin(origins = "*")
-    @PostMapping(path = "start-game")
-    public void startGame(@RequestParam String email,
-                          @RequestParam String lobbyName) {
-
-    }
-
-    /*
-        @Brief: This function is used to end a game
-        @Param: email - The email of the user to end the game.
-        @Param: lobbyName - The name of the lobby to end the game.
-        @Return: void - Returns nothing.
-     */
-    @CrossOrigin(origins = "*")
-    @PostMapping(path = "end-game")
-    public void endGame(@RequestParam String email,
-                        @RequestParam String lobbyName) {
-
+    @PostMapping(path = "submit-word")
+    public Map<String, Object> submitWord(@RequestParam (value = "email") String email,
+                           @RequestParam (value = "word") String word) {
+        String gameSessionName = this.gameController.getGameSessionName(email);
+        boolean result = this.gameController.addWord(email, gameSessionName, word);
+        Map<String, Object> response = new HashMap<>();
+        if (result) {
+            response.put("success", true);
+            response.put("message", "Word submitted.");
+        } else {
+            response.put("success", false);
+            response.put("message", "Word not submitted.");
+        }
+        return response;
     }
 
     /*
