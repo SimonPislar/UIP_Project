@@ -13,6 +13,8 @@ import JoinGame from "./JoinGame";
 import Language from "./Language";
 import Account from "./Account";
 import Lobby from "./Lobby";
+import WordInput from "./WordInput";
+import WaitingForWord from "./WaitingForWord";
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
@@ -28,7 +30,8 @@ root.render(
             <Route path="/language" element={<Language />} />
             <Route path="/account" element={<Account />} />
             <Route path="/lobby" element={<Lobby />} />
-
+            <Route path="/input-word" element={<WordInput />} />
+            <Route path="/waiting-for-word" element={<WaitingForWord />} />
         </Routes>
     </BrowserRouter>
 );
