@@ -1,11 +1,13 @@
 import React, { useEffect } from "react";
-import { useLocation } from "react-router-dom";
+import {useLocation, useNavigate} from "react-router-dom";
 import useWebSocket from "react-use-websocket";
 
 function WaitingForWord() {
     const location = useLocation();
     const queryParams = new URLSearchParams(location.search);
     const email = queryParams.get('email');
+
+    const navigate = useNavigate();
 
     const WS_URL = 'ws://192.168.0.17:8080/ws';
 
@@ -26,6 +28,7 @@ function WaitingForWord() {
             console.log(lastJsonMessage);
             if (lastJsonMessage.message === 'OriginalWord') {
                 console.log("Received OriginalWord message:", lastJsonMessage.word);
+                navigate(`/canvas?email=${encodeURIComponent(email)}&word=${encodeURIComponent(lastJsonMessage.word)}`);
                 // Handle the received word here
             }
         }
