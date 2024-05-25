@@ -3,16 +3,22 @@ import { Stage, Layer, Rect, Line } from 'react-konva';
 import Konva from 'konva';
 import './CSS/Canvas.css';
 import Button from './Button';
+import {useLocation} from "react-router-dom";
 
 const CanvasWidth = 1000;
 const CanvasHeight = 550;
 
-function Canvas({ word }) {
+function Canvas() {
     const [drawingColor, setDrawingColor] = useState('#000000');
     const [lineWidth, setLineWidth] = useState(2);
     const isDrawing = useRef(false);
     const stageRef = useRef(null);
     const linesRef = useRef([]);
+
+    const location = useLocation();
+    const queryParams = new URLSearchParams(location.search);
+    const email = queryParams.get('email');
+    const word = queryParams.get('word');
 
     const drawingColorRef = useRef(drawingColor);
     const lineWidthRef = useRef(lineWidth);
