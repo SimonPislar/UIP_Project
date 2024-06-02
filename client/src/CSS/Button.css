@@ -7,14 +7,6 @@
     background-color: #f47dda;
 }
 
-.button.small {
-    font-size: 5px;
-}
-
-.button.medium {
-    font-size: 16px;
-}
-
 .button.large {
     width: 12em;
     height: 2em;
@@ -29,10 +21,24 @@
     background-color: #f8ade8;
 }
 
-.button.small {
+.button.medium {
     width: 8em;
     height: 2em;
     font-size: 1.8em;
+}
+
+.button.medium:hover {
+    background-color: #F695E1;
+}
+
+.button.medium:active {
+    background-color: #f8ade8;
+}
+
+.button.small {
+    font-size: 1.8em;
+    width: 4.8em;
+    height: 1.3em;
 }
 
 .button.small:hover {
@@ -42,4 +48,20 @@
 .button.small:active {
     background-color: #f8ade8;
 }
+
+.button.tiny {
+    font-size: 1em;
+    width: 4.4em;
+    height: 1.3em;
+}
+
+.button.tiny:hover {
+    background-color: #F695E1;
+}
+
+.button.tiny:active {
+    background-color: #f8ade8;
+}
+
+
 
