@@ -50,9 +50,9 @@
 }
 
 .button.tiny {
-    font-size: 1em;
-    width: 4.4em;
-    height: 1.3em;
+    font-size: 0.8em;
+    width: 5em;
+    height: 1.6em;
 }
 
 .button.tiny:hover {
@@ -63,5 +63,6 @@
     background-color: #f8ade8;
 }
 
-
-
+.button.highlighted {
+    border: 3px solid red;
+}

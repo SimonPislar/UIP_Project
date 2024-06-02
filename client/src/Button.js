@@ -1,9 +1,15 @@
 import React from 'react';
 import './CSS/Button.css';
 
-function Button({ size, text, onClick, disabled, extra}) {
+function Button({ size, text, onClick, disabled, isHighlighted, extra }) {
     return (
-        <button className={`button ${size}`} onClick={onClick} disabled={disabled}>{text}</button>
+        <button
+            className={`button ${size} ${isHighlighted ? 'highlighted' : ''}`}
+            onClick={onClick}
+            disabled={disabled}
+        >
+            {text}
+        </button>
     );
 }
 
