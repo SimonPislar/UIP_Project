@@ -15,17 +15,22 @@ function Canvas() {
     const [lineWidth, setLineWidth] = useState(2);
     const [canvasDimensions, setCanvasDimensions] = useState({ width: window.innerWidth * 0.8, height: window.innerHeight * 0.8 });
     const [lines, setLines] = useState([]);
+    const [pencil, setPencil] = useState(true);
+    const [eraser, setEraser] = useState(false);
+    const [originalSize, setOriginalSize] = useState(1);
+    const [originalColor, setOriginalColor] = useState('#000000');
 
     const isDrawing = useRef(false);
     const stageRef = useRef(null);
+    const drawingColorRef = useRef(drawingColor);
+    const lineWidthRef = useRef(lineWidth);
 
     const location = useLocation();
     const queryParams = new URLSearchParams(location.search);
     const email = queryParams.get('email');
     const word = queryParams.get('word');
 
-    const drawingColorRef = useRef(drawingColor);
-    const lineWidthRef = useRef(lineWidth);
+    const [time, setTime] = useState(120);
 
     drawingColorRef.current = drawingColor;
     lineWidthRef.current = lineWidth;
@@ -73,6 +78,24 @@ function Canvas() {
                     }
                 }
             );
+    }
+
+    const handlePickPencil = () => {
+        setPencil(true);
+        setEraser(false);
+        setDrawingColor(originalColor);
+        setLineWidth(originalSize);
+        document.getElementById('color-picker').style.display = 'flex';
+    }
+
+    const handlePickEraser = () => {
+        setOriginalColor(drawingColor);
+        setOriginalSize(lineWidth);
+        setPencil(false);
+        setEraser(true);
+        setDrawingColor('#ffffff');
+        setLineWidth(20)
+        document.getElementById('color-picker').style.display = 'none';
     }
 
     useEffect(() => {
@@ -139,7 +162,7 @@ function Canvas() {
                     <h1>Draw: {word}</h1>
                 </div>
                 <div>
-                    <p>Time left: 02:00</p>
+                    <p>Time left: {time}s</p>
                 </div>
                 <div className="line"></div>
                 <div className="pencil-options">
@@ -154,7 +177,7 @@ function Canvas() {
                             style={{ marginTop: '1em' }}
                         />
                     </div>
-                    <div className="pencil-option-container">
+                    <div className="pencil-option-container" id="color-picker">
                         <p>Color</p>
                         <input
                             type="color"
@@ -172,8 +195,8 @@ function Canvas() {
                         <Button size="tiny" text="Clear &#128465;" onClick={handleClear} />
                     </div>
                     <div className="option-row">
-                        <Button size="tiny" text="Pencil &#9998;"/>
-                        <Button size="tiny" text="Eraser"/>
+                        <Button size="tiny" isHighlighted={pencil} onClick={handlePickPencil} text="Pencil &#9998;"/>
+                        <Button size="tiny" isHighlighted={eraser} onClick={handlePickEraser} text="Eraser"/>
                     </div>
                 </div>
                 <div className="line"></div>
