@@ -1,31 +1,82 @@
 .canvas-container {
     display: flex;
-    flex-direction: column;
+    justify-content: center;
     align-items: center;
+    height: 100vh;
 }
 
-.canvas-control-container {
+.padding {
+    padding: 1em;
+}
+
+.menu-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    font-size: 2em;
+}
+
+.menu-container h1 {
+    font-size: 1.1em;
+}
+
+.line {
+    width: 100%;
+    height: 0.05em;
+    background-color: black;
+    margin-top: 0.5em;
+    margin-bottom: 0.5em;
+}
+
+.pencil-options {
     display: flex;
     justify-content: space-around;
     align-items: center;
-    flex-wrap: wrap;
-    width: 100%;
-    padding: 2em;
+    width: 10em;
 }
 
-.paint-controls-container {
+.pencil-option-container {
     display: flex;
-    justify-content: space-between;
-    align-items: center;
-    flex-wrap: wrap;
-    width: 25%;
-}
-
-.top-menu {
-    background-color: white;
-    width: 100%;
-    display: flex;
+    flex-direction: column;
     justify-content: center;
     align-items: center;
-    border-bottom: 1px solid #030321;
+    width: 4em;
+}
+
+.pencil-option-container input {
+    height: 2em;
+}
+
+.pencil-option-container p {
+    font-size: 0.8em;
+}
+
+.draw-options {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 10em;
+    padding: 1em;
+}
+
+.draw-options p {
+    font-size: 0.8em;
+}
+
+.option-row {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    width: 100%;
+    padding: 0.2em;
+}
+
+.submit-button-container {
+    padding-top: 1em;
+}
+
+.stage-container {
+
 }
