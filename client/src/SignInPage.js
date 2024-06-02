@@ -69,7 +69,7 @@ function SignInPage() {
                 <Input type="password" placeholder="Password" value={password} onChange={handlePasswordChange}/>
             </div>
             <div className="input-container">
-                <Button size="small" text="Sign In" onClick={handleSignIn} />
+                <Button size="medium" text="Sign In" onClick={handleSignIn} />
             </div>
 
             {displayLoginError && (

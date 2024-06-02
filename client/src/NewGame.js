@@ -80,7 +80,7 @@ function NewGame() {
                 <input className="check-box" type="checkbox" checked={checked} onChange={handleCheckBoxChange}/>
             </div>
             <div className="item-container">
-                <Button size="small" text="Create game" onClick={handleCreateGame}/>
+                <Button size="medium" text="Create game" onClick={handleCreateGame}/>
             </div>
             {displayServerError && <p>{serverErrorMessage}</p>}
         </div>

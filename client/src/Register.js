@@ -85,7 +85,7 @@ function Register() {
             </div>
             <div className="row-container">
                 <div className="input-form-container">
-                    <Button size="small" text="Register" onClick={handleRegister}/>
+                    <Button size="medium" text="Register" onClick={handleRegister}/>
                 </div>
             </div>
             {displayRegisterError && (

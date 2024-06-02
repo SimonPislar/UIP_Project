@@ -100,9 +100,9 @@ function Lobby() {
                 </div>
             </div>
             <div className="buttons-container">
-                <Button size="small" text="Leave" onClick={() => console.log("Leave")} /> {/* Implement Leave button */}
+                <Button size="medium" text="Leave" onClick={() => console.log("Leave")} /> {/* Implement Leave button */}
                 {isHost &&
-                    <Button size="small" text="Start" onClick={handleStart} /> /* Implement Start button */
+                    <Button size="medium" text="Start" onClick={handleStart} /> /* Implement Start button */
                 }
             </div>
         </div>

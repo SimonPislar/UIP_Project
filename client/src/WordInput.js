@@ -52,7 +52,7 @@ function WordInput() {
                 <Input placeholder="Enter word" onChange={handleWordChange}/>
             </div>
             <div>
-                <Button size="small" text="Submit" onClick={handleSubmit} />
+                <Button size="medium" text="Submit" onClick={handleSubmit} />
             </div>
         </div>
     )
