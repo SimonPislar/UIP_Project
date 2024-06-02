@@ -94,7 +94,7 @@ function JoinGame() {
                 ))}
             </div>
             <div className="join-button-container">
-                <Button size="small" text="Join" onClick={handleJoin} disabled={!selectedLobby}/>
+                <Button size="medium" text="Join" onClick={handleJoin} disabled={!selectedLobby}/>
             </div>
         </div>
     );
