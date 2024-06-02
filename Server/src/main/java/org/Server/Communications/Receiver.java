@@ -275,6 +275,24 @@ public class Receiver {
         return response;
     }
 
+    @CrossOrigin(origins = "*")
+    @PostMapping(path = "submit-drawing")
+    public Map<String, Object> submitDrawing(@RequestParam (value = "email") String email,
+                                             @RequestParam (value = "drawing") String drawing) {
+        String gameSessionName = this.gameController.getGameSessionName(email);
+        System.out.println("Data received: " + drawing);
+        boolean result = true;
+        Map<String, Object> response = new HashMap<>();
+        if (result) {
+            response.put("success", true);
+            response.put("message", "Drawing submitted.");
+        } else {
+            response.put("success", false);
+            response.put("message", "Drawing not submitted.");
+        }
+        return response;
+    }
+
     /*
         @Brief: This function is used to check server status
         @Return: String - Returns "pong".
@@ -288,5 +306,7 @@ public class Receiver {
         response.put("message", "pong");
         return response;
     }
+
+
 
 }
