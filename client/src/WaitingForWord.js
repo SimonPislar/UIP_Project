@@ -9,25 +9,21 @@ function WaitingForWord() {
 
     const navigate = useNavigate();
 
-    const WS_URL = 'ws://192.168.0.17:8080/ws';
+    const WS_URL = 'ws://172.20.10.4:8080/ws';
 
     const { lastJsonMessage } = useWebSocket(WS_URL, {
         queryParams: { email: email },
         onOpen: () => console.log('WebSocket connection opened'),
         onMessage: (message) => {
-            const parsedMessage = JSON.parse(message.data);
-            if (parsedMessage.message === 'OriginalWord') {
-                console.log("Received OriginalWord message:", parsedMessage.word);
-                // Handle the received word here
-            }
+            console.log("Received message");
         }
     });
 
     useEffect(() => {
         if (lastJsonMessage) {
             console.log(lastJsonMessage);
-            if (lastJsonMessage.message === 'OriginalWord') {
-                console.log("Received OriginalWord message:", lastJsonMessage.word);
+            if (lastJsonMessage.message === 'word') {
+                console.log("Received word message:", lastJsonMessage.word);
                 navigate(`/canvas?email=${encodeURIComponent(email)}&word=${encodeURIComponent(lastJsonMessage.word)}`);
                 // Handle the received word here
             }
