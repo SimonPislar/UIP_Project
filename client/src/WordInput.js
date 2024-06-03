@@ -14,7 +14,7 @@ function WordInput() {
 
     const navigate = useNavigate();
 
-    const IP = 'http://192.168.0.17:8080'
+    const IP = 'http://172.20.10.4:8080'
 
     const handleWordChange = (event) => {
         setWord(event.target.value)
