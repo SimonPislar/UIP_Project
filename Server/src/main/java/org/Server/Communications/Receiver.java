@@ -278,10 +278,8 @@ public class Receiver {
     @CrossOrigin(origins = "*")
     @PostMapping(path = "submit-drawing")
     public Map<String, Object> submitDrawing(@RequestParam (value = "email") String email,
-                                             @RequestParam (value = "drawing") String drawing) {
-        String gameSessionName = this.gameController.getGameSessionName(email);
-        System.out.println("Data received: " + drawing);
-        boolean result = true;
+                                             @RequestParam (value = "drawing") String rawDrawingData) {
+        boolean result = this.gameController.addDrawing(email, rawDrawingData);
         Map<String, Object> response = new HashMap<>();
         if (result) {
             response.put("success", true);
@@ -289,6 +287,22 @@ public class Receiver {
         } else {
             response.put("success", false);
             response.put("message", "Drawing not submitted.");
+        }
+        return response;
+    }
+
+    @CrossOrigin(origins = "*")
+    @PostMapping(path = "submit-guess")
+    public Map<String, Object> submitGuess(@RequestParam (value = "email") String email,
+                                           @RequestParam (value = "guess") String guess) {
+        boolean result = this.gameController.addGuess(email, guess);
+        Map<String, Object> response = new HashMap<>();
+        if (result) {
+            response.put("success", true);
+            response.put("message", "Guess submitted.");
+        } else {
+            response.put("success", false);
+            response.put("message", "Guess not submitted.");
         }
         return response;
     }
