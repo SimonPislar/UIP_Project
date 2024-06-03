@@ -36,7 +36,7 @@ function Guess() {
             .then((data) => {
                 if (data.success) {
                     console.log('Successfully submitted guess');
-                    navigate(`/waiting-for-word?email=${encodeURIComponent(email)}`);
+                    navigate(`/waiting-for-server?email=${encodeURIComponent(email)}`);
                 } else {
                     console.log('Failed to submit guess');
                 }

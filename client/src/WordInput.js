@@ -35,7 +35,7 @@ function WordInput() {
             .then((data) => {
                 if (data.success) {
                     console.log(data.message);
-                    navigate(`/waiting-for-word?email=${encodeURIComponent(email)}`);
+                    navigate(`/waiting-for-server?email=${encodeURIComponent(email)}`);
                 } else {
                     console.log(data.message);
                 }
