@@ -16,6 +16,8 @@ import Lobby from "./Lobby";
 import WordInput from "./WordInput";
 import WaitingForWord from "./WaitingForWord";
 import Canvas from "./Canvas";
+import WaitingForDrawing from "./WaitingForDrawing";
+import Guess from "./Guess";
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
@@ -34,6 +36,8 @@ root.render(
             <Route path="/input-word" element={<WordInput />} />
             <Route path="/waiting-for-word" element={<WaitingForWord />} />
             <Route path="/canvas" element={<Canvas />} />
+            <Route path="/waiting-for-drawing" element={<WaitingForDrawing />} />
+            <Route path="/guess" element={<Guess />} />
         </Routes>
     </BrowserRouter>
 );
