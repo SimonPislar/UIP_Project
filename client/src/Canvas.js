@@ -2,14 +2,16 @@ import React, { useRef, useEffect, useState } from 'react';
 import { Stage, Layer, Rect, Line } from 'react-konva';
 import Konva from 'konva';
 import './CSS/Canvas.css';
-import { useLocation } from "react-router-dom";
+import {useLocation, useNavigate} from "react-router-dom";
 import Button from "./Button";
 import useWebSocket from "react-use-websocket";
 
 function Canvas() {
 
-    const IP = 'http://localhost:8080';
-    const WS_URL = 'ws://localhost:8080/ws';
+    const IP = 'http://172.20.10.4:8080';
+    const WS_URL = 'ws://172.20.10.4:8080/ws';
+
+    const navigate = useNavigate();
 
     const [drawingColor, setDrawingColor] = useState('#000000');
     const [lineWidth, setLineWidth] = useState(2);
@@ -35,18 +37,6 @@ function Canvas() {
     drawingColorRef.current = drawingColor;
     lineWidthRef.current = lineWidth;
 
-    const { lastJsonMessage } = useWebSocket(WS_URL, {
-        queryParams: { email: email },
-        onOpen: () => console.log('WebSocket connection opened'),
-        onMessage: (message) => {
-            const parsedMessage = JSON.parse(message.data);
-            if (parsedMessage.message === 'timeup') {
-                console.log("Received OriginalWord message:", parsedMessage.word);
-
-            }
-        }
-    });
-
     const handleUndo = () => {
         if (lines.length === 0) return;
         const newLines = lines.slice(0, -1);
@@ -71,13 +61,14 @@ function Canvas() {
             }
         }).then((response) => response.json())
             .then((data) => {
-                    if (data.success) {
-                        console.log(data.message);
-                    } else {
-                        console.log(data.message);
-                    }
+                if (data.success) {
+                    console.log(data.message);
+                    navigate(`/waiting-for-drawing?email=${encodeURIComponent(email)}`);
+                } else {
+                    console.log(data.message);
                 }
-            );
+            }
+        );
     }
 
     const handlePickPencil = () => {
@@ -201,10 +192,7 @@ function Canvas() {
                 </div>
                 <div className="line"></div>
                 <div className="submit-button-container">
-                    <Button size="small" text="Submit" onClick={handleSubmit} />
-                </div>
-                <div className="img-container">
-
+                    <Button size="small" text="Submit &#8594;" onClick={handleSubmit} />
                 </div>
             </div>
             <div className="stage-container padding">
