@@ -8,6 +8,8 @@ body {
   background-color: #D0EDF3;
   padding: 0;
   box-sizing: border-box;
+  overflow: hidden; /* Hide scrollbars */
+  font-size: 15px;
 }
 
 code {
