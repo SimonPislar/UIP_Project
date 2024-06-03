@@ -14,10 +14,10 @@ import Language from "./Language";
 import Account from "./Account";
 import Lobby from "./Lobby";
 import WordInput from "./WordInput";
-import WaitingForWord from "./WaitingForWord";
+import WaitingForServer from "./WaitingForServer";
 import Canvas from "./Canvas";
-import WaitingForDrawing from "./WaitingForDrawing";
 import Guess from "./Guess";
+import DisplayGameResult from "./DisplayGameResult";
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
@@ -34,10 +34,10 @@ root.render(
             <Route path="/account" element={<Account />} />
             <Route path="/lobby" element={<Lobby />} />
             <Route path="/input-word" element={<WordInput />} />
-            <Route path="/waiting-for-word" element={<WaitingForWord />} />
+            <Route path="/waiting-for-server" element={<WaitingForServer />} />
             <Route path="/canvas" element={<Canvas />} />
-            <Route path="/waiting-for-drawing" element={<WaitingForDrawing />} />
             <Route path="/guess" element={<Guess />} />
+            <Route path="display-end-game" element={<DisplayGameResult />} />
         </Routes>
     </BrowserRouter>
 );
