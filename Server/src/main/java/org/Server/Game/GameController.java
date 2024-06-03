@@ -165,13 +165,14 @@ public class GameController {
                 }
             });
         }
-        gameSession.rotateSketchBooks();
-
-        // Use CompletableFuture to send messages asynchronously
+        // Account for different rules for odd/even player counts
+        if (gameSession.getPlayers().size() % 2 != 0) {
+            gameSession.rotateSketchBooks();
+        }
         for (Player player : gameSession.getPlayers()) {
             String playerEmail = player.getEmail();
             String originalWord = player.getSketchBook().getOriginalWord();
-            String messageContent = String.format("{\"message\":\"OriginalWord\", \"word\":\"%s\"}", originalWord);
+            String messageContent = String.format("{\"message\":\"word\", \"word\":\"%s\"}", originalWord);
             try {
                 sender.sendMessageToUser(playerEmail, messageContent);
             } catch (IOException e) {
@@ -181,7 +182,7 @@ public class GameController {
     }
 
     /*
-        @Brief: This function is used to add a original word to the game session.
+        @Brief: This function is used to add an original word to the game session.
         @Param: sessionName - The name of the session.
         @Param: word - The word to be added.
         @Param: email - The email of the player.
@@ -197,6 +198,119 @@ public class GameController {
         if (gameSession.getPlayers().size() == gameSession.getOriginalWords().size()) { // All players have added their words
             Runnable gameStarter = () -> prepareGame(gameSession);
             serverController.scheduleAsyncTask(gameStarter, 2);
+        }
+        return true;
+    }
+
+    private void sendDrawings(GameSession gameSession) {
+        gameSession.getGameOrder().forEach(player -> {
+            String email = player.getEmail();
+            String rawDrawingData = player.getSketchBook().getLastDrawing().getDrawingData();
+            String messageContent = String.format("{\"message\":\"drawing\", \"data\":\"%s\"}", rawDrawingData);
+            try {
+                sender.sendMessageToUser(email, messageContent);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        });
+    }
+
+    public boolean addDrawing(String email, String rawDrawingData) {
+        GameSession gameSession = getGameSession(getGameSessionName(email));
+        if (gameSession == null) {
+            return false;
+        }
+        Drawing drawing = new Drawing(email, rawDrawingData);
+        gameSession.getGameOrder().forEach(player -> {
+            if (player.getEmail().equals(email)) {
+                player.getSketchBook().addDrawing(drawing);
+            }
+        });
+        boolean allDrawingsReceived = false;
+        ArrayList<Player> gameOrder = gameSession.getGameOrder();
+        for (int i = 0; i < gameOrder.size(); i++) {
+            if (gameOrder.get(i).getSketchBook().getDrawings().size() == gameOrder.get((i + 1) % gameOrder.size()).getSketchBook().getDrawings().size()) {
+                allDrawingsReceived = true;
+            } else {
+                allDrawingsReceived = false;
+                break;
+            }
+        }
+        if (allDrawingsReceived) {
+            gameSession.rotateSketchBooks();
+            Runnable sendDrawings = () -> sendDrawings(gameSession);
+            serverController.scheduleAsyncTask(sendDrawings, 2);
+        }
+        return true;
+    }
+
+    private void sendGuesses(GameSession gameSession) {
+        gameSession.getGameOrder().forEach(player -> {
+            String email = player.getEmail();
+            String guess = player.getSketchBook().getLastDrawing().getGuess();
+            String messageContent = String.format("{\"message\":\"guess\", \"guess\":\"%s\"}", guess);
+            try {
+                sender.sendMessageToUser(email, messageContent);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        });
+    }
+
+    private boolean gameIsFinished(GameSession gameSession) {
+        Player player = gameSession.getGameOrder().get(0);
+        return player.getSketchBook().getOwnersEmail().equals(player.getEmail());
+    }
+
+    private void sendEndGame(GameSession gameSession) {
+        gameSession.getGameOrder().forEach(player -> {
+            String email = player.getEmail();
+            String messageContent = "{\"message\":\"gameend\"}";
+            try {
+                sender.sendMessageToUser(email, messageContent);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        });
+    }
+
+    private void endGame(GameSession gameSession) {
+        this.activeGameSessions.remove(gameSession);
+        this.inactiveGameSessions.add(gameSession);
+    }
+
+    public boolean addGuess(String email, String guess) {
+        GameSession gameSession = getGameSession(getGameSessionName(email));
+        if (gameSession == null) {
+            return false;
+        }
+        Player player = gameSession.getPlayers().stream().filter(p ->
+                p.getEmail().equals(email)).findFirst().orElse(null);
+        if (player == null) {
+            return false;
+        }
+        Drawing drawing = player.getSketchBook().getLastDrawing();
+        drawing.setGuess(guess);
+        drawing.setGuesserEmail(email);
+        boolean allGuessesReceived = true;
+        for (Player p : gameSession.getGameOrder()) {
+            if (p.getSketchBook().getLastDrawing().getGuess() == null) {
+                allGuessesReceived = false;
+                break;
+            }
+        }
+        if (allGuessesReceived) {
+            gameSession.rotateSketchBooks();
+            if (gameIsFinished(gameSession)) {
+                System.out.println("Game is finished");
+                Runnable gameEnder = () -> sendEndGame(gameSession);
+                serverController.scheduleAsyncTask(gameEnder, 2);
+                Runnable endGame = () -> endGame(gameSession);
+                serverController.scheduleAsyncTask(endGame, 300);
+            } else {
+                Runnable sendGuesses = () -> sendGuesses(gameSession);
+                serverController.scheduleAsyncTask(sendGuesses, 2);
+            }
         }
         return true;
     }
