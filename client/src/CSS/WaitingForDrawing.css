@@ -1,0 +1,11 @@
+.waiting-for-draw-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+}
+
+.waiting-for-draw-container h1 {
+    font-size: 4em;
+}
