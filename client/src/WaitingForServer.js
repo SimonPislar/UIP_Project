@@ -2,7 +2,7 @@ import React, { useEffect } from "react";
 import {useLocation, useNavigate} from "react-router-dom";
 import useWebSocket from "react-use-websocket";
 
-function WaitingForWord() {
+function WaitingForServer() {
     const location = useLocation();
     const queryParams = new URLSearchParams(location.search);
     const email = queryParams.get('email');
@@ -26,6 +26,20 @@ function WaitingForWord() {
                 console.log("Received word message:", lastJsonMessage.word);
                 navigate(`/canvas?email=${encodeURIComponent(email)}&word=${encodeURIComponent(lastJsonMessage.word)}`);
                 // Handle the received word here
+            } else if (lastJsonMessage.message === 'drawing') {
+                console.log("Received Drawing message:", lastJsonMessage.data);
+                const dataToPass = { drawing: lastJsonMessage.data };
+                navigate(
+                    `/guess?email=${encodeURIComponent(email)}`,
+                    {
+                        state: {
+                            drawing: dataToPass
+                        }
+                    }
+                )
+            } else if (lastJsonMessage.message === 'gameend') {
+                console.log("Received game over message");
+                navigate(`/display-end-game?email=${encodeURIComponent(email)}`);
             }
         }
     }, [lastJsonMessage]);
@@ -33,11 +47,11 @@ function WaitingForWord() {
     return (
         <div className="page-container">
             <div>
-                <h1>Waiting for Word</h1>
+                <h1>Waiting for server...</h1>
             </div>
             {/* Add more UI elements here as needed */}
         </div>
     );
 }
 
-export default WaitingForWord;
+export default WaitingForServer;
