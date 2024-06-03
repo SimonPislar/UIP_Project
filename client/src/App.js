@@ -11,7 +11,7 @@ function App() {
 
     const delayInMilliseconds = 2000; //1 second
 
-    const IP = 'http://192.168.0.17:8080'
+    const IP = 'http://172.20.10.4:8080'
 
     const establishConnection = async () => {
         try {
