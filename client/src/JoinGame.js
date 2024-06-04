@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import './CSS/JoinGame.css';
 import Button from "./Button";
+import useWebSocket from "react-use-websocket";
 
 function JoinGame() {
     const [lobbies, setLobbies] = useState([]);
@@ -12,6 +13,7 @@ function JoinGame() {
     const email = queryParams.get('email');
 
     const IP = 'http://172.20.10.4:8080'
+    const WS_URL = 'ws://172.20.10.4:8080/ws';
 
     const getLobbies = async () => {
         const response = await fetch(IP + '/receiver/get-lobbies');
@@ -43,6 +45,19 @@ function JoinGame() {
             }
         );
     }
+
+    const { sendJsonMessage, lastJsonMessage } = useWebSocket(WS_URL, {
+        queryParams: { email: email }
+    });
+
+    useEffect(() => {
+        if (lastJsonMessage) {
+            console.log(lastJsonMessage);
+            if (lastJsonMessage.message === 'newgame') {
+                setLobbies([...lobbies, lastJsonMessage.lobby]);
+            }
+        }
+    }, [lastJsonMessage]);
 
     useEffect(() => {
         checkPlayerInLobby();
