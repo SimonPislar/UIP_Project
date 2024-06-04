@@ -75,12 +75,40 @@ function Lobby() {
         });
     };
 
+    const handleLeave = () => {
+        console.log("Leave button clicked");
+        const formData = new URLSearchParams();
+        formData.append('email', email);
+        fetch(IP + '/receiver/leave-lobby', {
+            method: 'POST',
+            body: formData,
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded'
+            }
+        }).then((response) => response.json())
+            .then((data) => {
+                    if (data.success) {
+                        console.log(data.message);
+                        navigate(`/home?email=${encodeURIComponent(email)}`);
+                    } else {
+                        console.log(data.message);
+                    }
+                }
+            );
+    };
+
     useEffect(() => {
         if (lastJsonMessage) {
             console.log(lastJsonMessage);
             if (lastJsonMessage.message === 'Start') {
                 console.log("Received Start message");
                 navigate(`/input-word?email=${encodeURIComponent(email)}`);
+            } else if (lastJsonMessage.message === 'playerjoined') {
+                console.log("Received PlayerJoined message");
+                setPlayers([...players, lastJsonMessage.player]);
+            } else if (lastJsonMessage.message === 'kicked') {
+                console.log("Received Kicked message");
+                navigate(`/home?email=${encodeURIComponent(email)}`);
             }
         }
     }, [lastJsonMessage, navigate, email]);
@@ -100,7 +128,7 @@ function Lobby() {
                 </div>
             </div>
             <div className="buttons-container">
-                <Button size="medium" text="Leave" onClick={() => console.log("Leave")} /> {/* Implement Leave button */}
+                <Button size="medium" text="Leave" onClick={handleLeave} /> {/* Implement Leave button */}
                 {isHost &&
                     <Button size="medium" text="Start" onClick={handleStart} /> /* Implement Start button */
                 }
