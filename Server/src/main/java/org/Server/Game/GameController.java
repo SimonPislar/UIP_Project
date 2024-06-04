@@ -41,6 +41,9 @@ public class GameController {
         GameSession gameSession = new GameSession(playerCount, player, sessionName);
         this.activeGameSessions.add(gameSession);
         System.out.println("Game session created: " + sessionName + " with " + playerCount + " players.");
+        String messageContent = String.format("{\"message\":\"newgame\", \"lobby\":\"%s\"}", gameSession.getSessionName());
+        Runnable informAboutNewGame = () -> serverController.messageAllUsers(messageContent);
+        serverController.scheduleAsyncTask(informAboutNewGame, 1);
         return true;
     }
 
@@ -121,8 +124,25 @@ public class GameController {
         if (gameSession.getPlayers().size() == gameSession.getPlayerCount()) {
             return false;
         }
+        for (Player p : gameSession.getPlayers()) {
+            try {
+                sender.sendMessageToUser(p.getEmail(), "{\"message\":\"playerjoined\", \"player\":\"" + player.getName() + "\"}");
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
         gameSession.appendPlayer(player);
         return true;
+    }
+
+    private void kickAllPlayers(ArrayList<Player> players) {
+        for (Player player : players) {
+            try {
+                sender.sendMessageToUser(player.getEmail(), "{\"message\":\"kicked\"}");
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
     }
 
     /*
@@ -130,13 +150,24 @@ public class GameController {
         @Param: email - The email of the player.
         @Param: sessionName - The name of the session.
     */
-    public void removePlayerFromGameSession(String email, String sessionName) {
-        User user = this.serverController.getUser(email);
-        this.activeGameSessions.forEach(gameSession -> {
-            if (gameSession.getSessionName().equals(sessionName)) {
-                gameSession.getPlayers().removeIf(player -> player.getID() == user.getId());
+    public boolean removePlayerFromGameSession(String email) {
+        GameSession gameSession = getGameSession(getGameSessionName(email));
+        if (gameSession == null) {
+            return false;
+        }
+        if (gameSession.getPlayers().get(0).getEmail().equals(email)) {
+            ArrayList<Player> playersCopy = new ArrayList<>(gameSession.getPlayers());
+            Runnable kickPlayers = () -> kickAllPlayers(playersCopy);
+            serverController.scheduleAsyncTask(kickPlayers, 1);
+            int playerCount = gameSession.getPlayers().size();
+            for (int i = 0; i < playerCount; i++) {
+                gameSession.deletePlayer(gameSession.getLastPlayer());
             }
-        });
+            this.activeGameSessions.remove(gameSession);
+        } else {
+            gameSession.deletePlayer(email);
+        }
+        return true;
     }
 
     /*
@@ -274,11 +305,6 @@ public class GameController {
         });
     }
 
-    private void endGame(GameSession gameSession) {
-        this.activeGameSessions.remove(gameSession);
-        this.inactiveGameSessions.add(gameSession);
-    }
-
     public boolean addGuess(String email, String guess) {
         GameSession gameSession = getGameSession(getGameSessionName(email));
         if (gameSession == null) {
@@ -302,11 +328,9 @@ public class GameController {
         if (allGuessesReceived) {
             gameSession.rotateSketchBooks();
             if (gameIsFinished(gameSession)) {
-                System.out.println("Game is finished");
+                System.out.println(gameSession.getSessionName() + " is finished!");
                 Runnable gameEnder = () -> sendEndGame(gameSession);
                 serverController.scheduleAsyncTask(gameEnder, 2);
-                Runnable endGame = () -> endGame(gameSession);
-                serverController.scheduleAsyncTask(endGame, 300);
             } else {
                 Runnable sendGuesses = () -> sendGuesses(gameSession);
                 serverController.scheduleAsyncTask(sendGuesses, 2);
