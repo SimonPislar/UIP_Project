@@ -27,6 +27,10 @@ public class GameSession {
         this.gameOrder = new ArrayList<>();
     }
 
+    public Player getLastPlayer() {
+        return this.players.get(this.players.size() - 1);
+    }
+
     /*
         @Brief: This function is used to rotate the sketch books of the players.
         @Return: void - Returns nothing.
@@ -128,6 +132,15 @@ public class GameSession {
     */
     public void deletePlayer(Player player) {
         this.players.removeIf(p -> p.getName().equals(player.getName()));
+    }
+
+    /*
+        @Brief: This function is used to delete a player from the game session.
+        @Param: email - The email of the player to be deleted.
+        @Return: void - Returns nothing.
+    */
+    public void deletePlayer(String email) {
+        this.players.removeIf(p -> p.getEmail().equals(email));
     }
 
     /*
