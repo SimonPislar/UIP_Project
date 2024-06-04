@@ -1,11 +1,14 @@
 package org.Server;
 
+import org.Server.Communications.Sender;
 import org.Server.Security.SecurityTools;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import org.Server.DBMS.DBController;
 import org.Server.DBMS.User;
+
+import java.util.ArrayList;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
@@ -15,13 +18,16 @@ public class ServerController {
 
     DBController dbController;
     SecurityTools securityTools;
+    private ArrayList<User> usersSignedIn = new ArrayList<>();
+    private final Sender sender;
 
     private final ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(4);
 
     @Autowired
-    public ServerController(DBController dbController, SecurityTools securityTools) {
+    public ServerController(DBController dbController, SecurityTools securityTools, Sender sender) {
         this.dbController = dbController;
         this.securityTools = securityTools;
+        this.sender = sender;
     }
 
     /*
@@ -50,7 +56,20 @@ public class ServerController {
                 System.out.println("Invalid credentials for user " + user.getUsername() + ".");
             }
         }
+        if (!usersSignedIn.contains(user)) {
+            usersSignedIn.add(user);
+        }
         return result;
+    }
+
+    public void messageAllUsers(String message) {
+        for (User user : usersSignedIn) {
+            try {
+                this.sender.sendMessageToUser(user.getEmail(), message);
+            } catch (Exception e) {
+                System.out.println("Failed to send message to user " + user.getEmail() + ".");
+            }
+        }
     }
 
     /*
