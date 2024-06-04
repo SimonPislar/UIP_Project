@@ -212,7 +212,7 @@ public class Receiver {
         for (GameSession lobby : lobbies) {
             lobbyNames.add(lobby.getSessionName());
         }
-        System.out.println("Lobbies: " + lobbyNames.toString());
+        System.out.println("Lobbies: " + lobbyNames);
         String[] lobbyNamesArray = lobbyNames.toArray(new String[0]);
         Map<String, Object> response = new HashMap<>();
         response.put("success", true);
@@ -248,14 +248,21 @@ public class Receiver {
     /*
         @Brief: This function is used to leave a lobby
         @Param: email - The email of the user to leave the lobby.
-        @Param: lobbyName - The name of the lobby to be left.
-        @Return: void - Returns nothing.
+        @Return: MAP<String, Object> - Returns a map with the success and message.
      */
     @CrossOrigin(origins = "*")
     @PostMapping(path = "leave-lobby")
-    public void leaveLobby(@RequestParam String email,
-                           @RequestParam String lobbyName) {
-
+    public Map<String, Object> leaveLobby(@RequestParam (value = "email") String email) {
+        boolean result = gameController.removePlayerFromGameSession(email);
+        Map<String, Object> response = new HashMap<>();
+        if (result) {
+            response.put("success", true);
+            response.put("message", "Left lobby.");
+        } else {
+            response.put("success", false);
+            response.put("message", "Player not in lobby");
+        }
+        return response;
     }
 
     @CrossOrigin(origins = "*")
