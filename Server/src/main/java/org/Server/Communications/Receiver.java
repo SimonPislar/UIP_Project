@@ -339,4 +339,19 @@ public class Receiver {
         return response;
     }
 
+    @CrossOrigin(origins = "*")
+    @PostMapping(path = "exit-finished-game")
+    public Map<String, Object> exitFinishedGame(@RequestParam (value = "email") String email) {
+        boolean result = gameController.removePlayerFromGameSessionWithoutCheck(email);
+        Map<String, Object> response = new HashMap<>();
+        if (result) {
+            response.put("success", true);
+            response.put("message", "Left game.");
+        } else {
+            response.put("success", false);
+            response.put("message", "Player not in game.");
+        }
+        return response;
+    }
+
 }
