@@ -9,7 +9,7 @@ function WaitingForServer() {
 
     const navigate = useNavigate();
 
-    const WS_URL = 'ws://172.20.10.4:8080/ws';
+    const WS_URL = 'ws://192.168.0.17:8080/ws';
 
     const { lastJsonMessage } = useWebSocket(WS_URL, {
         queryParams: { email: email },

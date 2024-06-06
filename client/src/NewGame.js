@@ -16,7 +16,7 @@ function NewGame() {
     const [displayServerError, setDisplayServerError] = useState(false);
     const [serverErrorMessage, setServerErrorMessage] = useState('');
 
-    const IP = 'http://172.20.10.4:8080'
+    const IP = 'http://192.168.0.17:8080'
 
     const navigate = useNavigate();
 

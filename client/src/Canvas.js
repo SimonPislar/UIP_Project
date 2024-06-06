@@ -8,8 +8,8 @@ import useWebSocket from "react-use-websocket";
 
 function Canvas() {
 
-    const IP = 'http://172.20.10.4:8080';
-    const WS_URL = 'ws://172.20.10.4:8080/ws';
+    const IP = 'http://192.168.0.17:8080';
+    const WS_URL = 'ws://192.168.0.17:8080/ws';
 
     const navigate = useNavigate();
 

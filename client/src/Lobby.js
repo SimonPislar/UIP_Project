@@ -13,9 +13,9 @@ function Lobby() {
     const [players, setPlayers] = useState([]);
     const [isHost, setIsHost] = useState(false);
 
-    const IP = 'http://172.20.10.4:8080'
+    const IP = 'http://192.168.0.17:8080'
 
-    const WS_URL = 'ws://172.20.10.4:8080/ws';
+    const WS_URL = 'ws://192.168.0.17:8080/ws';
 
     const { sendJsonMessage, lastJsonMessage } = useWebSocket(WS_URL, {
         queryParams: { email: email }
