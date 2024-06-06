@@ -40,6 +40,9 @@ function WaitingForServer() {
             } else if (lastJsonMessage.message === 'gameend') {
                 console.log("Received game over message");
                 navigate(`/display-end-game?email=${encodeURIComponent(email)}`);
+            } else if (lastJsonMessage.message === 'guess') {
+                console.log("Received new game message");
+                navigate(`/canvas?email=${encodeURIComponent(email)}&word=${encodeURIComponent(lastJsonMessage.guess)}`);
             }
         }
     }, [lastJsonMessage]);
