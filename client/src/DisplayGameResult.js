@@ -1,5 +1,5 @@
-import React, {useEffect, useState} from "react";
-import {useLocation} from "react-router-dom";
+import React, {useEffect, useRef, useState} from "react";
+import {useLocation, useNavigate} from "react-router-dom";
 import useWebSocket from "react-use-websocket";
 
 import './CSS/DisplayGameResult.css';
@@ -11,12 +11,15 @@ function DisplayGameResult() {
     const queryParams = new URLSearchParams(location.search);
     const email = queryParams.get('email');
 
+    const headerRef = useRef(null);
+    const navigate = useNavigate();
+
     const [sketchbooks, setSketchbooks] = useState([]);
     const [currentSketchbookIndex, setCurrentSketchbookIndex] = useState(0);
     const [isOpen, setIsOpen] = useState(false);
 
-    const WS_URL = 'ws://172.20.10.4:8080/ws';
-    const IP = 'http://172.20.10.4:8080'
+    const WS_URL = 'ws://192.168.0.17:8080/ws';
+    const IP = 'http://192.168.0.17:8080'
 
     const { lastJsonMessage } = useWebSocket(WS_URL, {
         queryParams: { email: email },
@@ -33,14 +36,53 @@ function DisplayGameResult() {
         }
     }, [lastJsonMessage]);
 
+    useEffect(() => {
+        const header = headerRef.current;
+        let startTime = null;
+        const duration = 4000;
+        const bounceHeight = 10; // Adjusted to 15% of the viewport height for a smaller bounce
+        const settleHeight = 10; // Adjusted to 10% of the viewport height for a higher settle position
+
+        const bounce = (timestamp) => {
+            if (!startTime) startTime = timestamp;
+            const elapsed = timestamp - startTime;
+
+            const progress = Math.min(elapsed / duration, 1);
+            const easing = easeOutElastic(progress);
+            const currentHeight = easing * bounceHeight - (progress * (bounceHeight - settleHeight));
+
+            header.style.transform = `translateY(${currentHeight}vh)`;
+
+            if (progress < 1) {
+                requestAnimationFrame(bounce);
+            } else {
+                header.style.transform = `translateY(${settleHeight}vh)`;
+            }
+        };
+
+        const easeOutElastic = (t) => {
+            const p = 0.3;
+            return Math.pow(2, -10 * t) * Math.sin((t - p / 4) * (2 * Math.PI) / p) + 1;
+        };
+
+        requestAnimationFrame(bounce);
+    }, []);
+
+
     const nextSketchbook = () => {
         setCurrentSketchbookIndex((prevIndex) => (prevIndex + 1) % sketchbooks.length);
+        if (isOpen) {
+            setIsOpen(false);
+        }
     };
 
     const prevSketchbook = () => {
         setCurrentSketchbookIndex((prevIndex) =>
             prevIndex === 0 ? sketchbooks.length - 1 : prevIndex - 1
         );
+        if (isOpen) {
+            setIsOpen(false);
+        }
     };
 
     const toggleOpen = () => {
@@ -63,9 +105,33 @@ function DisplayGameResult() {
         );
     }
 
+    const handleExit = () => {
+        const formdata = new URLSearchParams();
+        formdata.append('email', email);
+        fetch(IP + '/receiver/exit-finished-game', {
+            method: 'POST',
+            body: formdata,
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded'
+            }
+        }).then((response) => response.json())
+            .then((data) => {
+                if (data.success) {
+                    console.log(data.message);
+                    navigate(`/home?email=${encodeURIComponent(email)}`);
+                } else {
+                    console.log(data.message);
+                }
+            }
+        );
+    }
+
     return (
         <div className="display-page-container">
-            <button className="get-json" onClick={getJSONData}>Get JSON</button>
+            <button className="get-json" onClick={getJSONData}>Reload sketchbooks</button>
+            {!isOpen &&
+                <h1 ref={headerRef} className="bouncing-header">Final game state</h1>
+            }
             <div className="display-container">
                 <div className="side-button-container">
                     {sketchbooks.length > 0 && currentSketchbookIndex !== 0 && (
@@ -114,6 +180,9 @@ function DisplayGameResult() {
                     )}
                 </div>
             </div>
+            <footer>
+                <Button onClick={handleExit} size="medium" text="Exit"/>
+            </footer>
         </div>
     );
 }
