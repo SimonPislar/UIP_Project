@@ -46,10 +46,19 @@ function Guess() {
 
     return (
         <div className="guess-container">
-            <h1>Guess the Drawing</h1>
-            <img className="drawing" src={rawDrawingData.drawing} alt="Drawing to guess" />
-            <Input size="large" value={guess} onChange={handleGuessChange} placeholder="Enter your guess here" />
-            <Button size="medium" onClick={handleGuess} text="Submit Guess" />
+            <div className="guess-item">
+                <h1>Guess the Drawing</h1>
+            </div>
+            <div className="guess-item">
+                <img className="drawing" src={rawDrawingData.drawing} alt="Drawing to guess" />
+            </div>
+            <div className="guess-item">
+                <Input size="large" value={guess} onChange={handleGuessChange} placeholder="Enter your guess here" />
+            </div>
+            <div className="guess-item">
+                <Button size="medium" onClick={handleGuess} text="Submit" />
+
+            </div>
         </div>
     );
 }
