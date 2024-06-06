@@ -4,13 +4,15 @@
     align-items: center;
     justify-content: center;
     height: 100vh;
+    padding: 1em;
 }
 
 .lobby-list-container {
     background-color: white;
     border-radius: 1em;
     padding: 1em;
-    width: 30em;
+    width: 90vw;
+    max-width: 30em;
     overflow-y: auto;
     box-shadow: 0 0.4em 0.8em rgba(0, 0, 0, 0.1);
 }
@@ -32,4 +34,29 @@
 
 .join-button-container {
     padding: 2em;
+}
+
+/* Media query for phones */
+@media (max-width: 600px) {
+
+    h1 {
+        font-size: 2em;
+    }
+
+    .join-game-container {
+        padding: 1em;
+    }
+
+    .lobby-list-container {
+        width: 90%;
+        padding: 0.5em;
+    }
+
+    .lobby-item {
+        padding: 0.5em;
+    }
+
+    .join-button-container {
+        padding: 1em;
+    }
 }
