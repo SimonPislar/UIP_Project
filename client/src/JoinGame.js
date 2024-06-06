@@ -12,7 +12,7 @@ function JoinGame() {
     const queryParams = new URLSearchParams(location.search);
     const email = queryParams.get('email');
 
-    const IP = 'http://172.20.10.4:8080'
+    const IP = 'http://172.20.10.4:8080';
     const WS_URL = 'ws://172.20.10.4:8080/ws';
 
     const getLobbies = async () => {
@@ -42,9 +42,8 @@ function JoinGame() {
                 } else {
                     console.log(data.message);
                 }
-            }
-        );
-    }
+            });
+    };
 
     const { sendJsonMessage, lastJsonMessage } = useWebSocket(WS_URL, {
         queryParams: { email: email }
@@ -87,8 +86,7 @@ function JoinGame() {
                     } else {
                         console.log(data.message);
                     }
-                }
-            );
+                });
         }
     };
 
