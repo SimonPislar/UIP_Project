@@ -3,6 +3,8 @@ package org.Server.Communications;
 import jakarta.servlet.http.HttpServletRequest;
 import org.Server.Game.GameController;
 import org.Server.Game.GameSession;
+import org.Server.Game.Player;
+import org.Server.Game.SketchBook;
 import org.Server.ServerController;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -93,8 +95,8 @@ public class Receiver {
      */
     @CrossOrigin(origins = "*")
     @DeleteMapping(path = "delete-account")
-    public String deleteAccount(@RequestParam String email,
-                                @RequestParam String password) {
+    public String deleteAccount(@RequestParam (value = "email") String email,
+                                @RequestParam (value = "password") String password) {
         return "";
     }
 
@@ -328,6 +330,13 @@ public class Receiver {
         return response;
     }
 
-
+    @CrossOrigin(origins = "*")
+    @PostMapping(path = "get-sketchbooks")
+    public Map<String, Object> getSketchbooks(@RequestParam (value = "email") String email) {
+        gameController.sendSketchbookData(email);
+        Map<String, Object> response = new HashMap<>();
+        response.put("success", true);
+        return response;
+    }
 
 }
