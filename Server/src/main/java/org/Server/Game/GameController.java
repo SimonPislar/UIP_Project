@@ -147,6 +147,18 @@ public class GameController {
         }
     }
 
+    public boolean removePlayerFromGameSessionWithoutCheck(String email) {
+        GameSession gameSession = getGameSession(getGameSessionName(email));
+        if (gameSession == null) {
+            return false;
+        }
+        gameSession.deletePlayer(email);
+        if (gameSession.getPlayers().isEmpty()) {
+            this.activeGameSessions.remove(gameSession);
+        }
+        return true;
+    }
+
     /*
         @Brief: This function is used to remove a player from the game session.
         @Param: email - The email of the player.
