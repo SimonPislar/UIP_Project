@@ -1,0 +1,118 @@
+body {
+    overflow: visible;
+}
+
+.get-json {
+    position: absolute;
+    top: 0;
+    right: 0;
+}
+
+.toggle-button-container {
+    padding-bottom: 1vh;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.sketchbook-content-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.sketchbook-drawing-data {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.display-padding {
+    padding: 1em;
+}
+
+.side-button-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 39vw;
+}
+
+.display-img {
+    width: 36.4vw;
+    height: 41vh;
+}
+
+.sketchbook {
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.display-page-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+}
+
+.display-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.sketchbook-container {
+    width: 40vw;
+}
+
+.side-button {
+    display: none;
+}
+
+@media screen and (max-width: 600px) {
+
+    .display-img {
+        width: 90vw;
+        height: 45vh;
+    }
+
+    .side-button-container {
+        display: none;
+    }
+
+    .sketchbook-container {
+        width: 90vw;
+        text-align: center;
+    }
+
+    .side-button {
+        display: block;
+        width: 30vw;
+    }
+
+    .main-button {
+        width: 30vw;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .button.tiny {
+        font-size: 2vh;
+        width: 15vw;
+        height: 4vh;
+    }
+
+    .toggle-button-container {
+        display: flex;
+        align-items: center;
+        justify-content: space-around;
+        width: 90vw;
+    }
+
+}
