@@ -7,7 +7,7 @@
 }
 
 .input-container {
-    padding: 1em;
+    padding: 2vh;
 }
 
 .help {
@@ -27,7 +27,7 @@
 
 p {
     margin: 0;
-    padding: 0.2em;
+    padding: 0.5vh;
 }
 
 .error-message {
