@@ -21,6 +21,8 @@ function Canvas() {
     const [eraser, setEraser] = useState(false);
     const [originalSize, setOriginalSize] = useState(1);
     const [originalColor, setOriginalColor] = useState('#000000');
+    const [isMenuOpen, setIsMenuOpen] = useState(false);
+
 
     const isDrawing = useRef(false);
     const stageRef = useRef(null);
@@ -36,6 +38,10 @@ function Canvas() {
 
     drawingColorRef.current = drawingColor;
     lineWidthRef.current = lineWidth;
+
+    const toggleMenu = () => {
+        setIsMenuOpen(!isMenuOpen);
+    };
 
     const handleUndo = () => {
         if (lines.length === 0) return;
@@ -148,6 +154,61 @@ function Canvas() {
 
     return (
         <div className="canvas-container">
+            <div className="display-orientation-issue">
+                <h2>Rotate your device to landscape mode</h2>
+                <p>If you can't, unfortunately your device is not supported.</p>
+            </div>
+            <div className={`hamburger-menu ${isMenuOpen ? 'open' : ''}`}>
+                <h1>Draw: {word}</h1>
+                <p className="hamburger-word-display">Word: {word}</p>
+                <p>Time left: {time}s</p>
+                <div className="line"></div>
+                <div className="pencil-options">
+                    <div className="pencil-option-container">
+                        <p>Size</p>
+                        <input
+                            className="size-container"
+                            type="range"
+                            min="1"
+                            max="40"
+                            value={lineWidth}
+                            onChange={(e) => setLineWidth(e.target.value)}
+                            style={{ marginTop: '1em' }}
+                        />
+                    </div>
+                    <div className="pencil-option-container" id="color-picker">
+                        <p>Color</p>
+                        <input
+                            className="color-container"
+                            type="color"
+                            value={drawingColor}
+                            onChange={(e) => setDrawingColor(e.target.value)}
+                            style={{ marginTop: '1em' }}
+                        />
+                    </div>
+                </div>
+                <div className="line"></div>
+                <div className="draw-options">
+                    <p>Options</p>
+                    <div className="option-row">
+                        <Button size="tiny" text="Undo" onClick={handleUndo} />
+                        <Button size="tiny" text="Clear" onClick={handleClear} />
+                    </div>
+                    <div className="option-row">
+                        <Button size="tiny" isHighlighted={pencil} onClick={handlePickPencil} text="Pencil"/>
+                        <Button size="tiny" isHighlighted={eraser} onClick={handlePickEraser} text="Eraser"/>
+                    </div>
+                </div>
+                <div className="line"></div>
+                <div className="submit-button-container">
+                    <Button size="small" text="Submit" onClick={handleSubmit} />
+                </div>
+            </div>
+            <div className="hamburger" onClick={toggleMenu}>
+                <div></div>
+                <div></div>
+                <div></div>
+            </div>
             <div className="menu-container padding">
                 <div>
                     <h1>Draw: {word}</h1>
@@ -182,17 +243,17 @@ function Canvas() {
                 <div className="draw-options">
                     <p>Options</p>
                     <div className="option-row">
-                        <Button size="tiny" text="Undo &#9100;" onClick={handleUndo} />
-                        <Button size="tiny" text="Clear &#128465;" onClick={handleClear} />
+                        <Button size="tiny" text="Undo" onClick={handleUndo} />
+                        <Button size="tiny" text="Clear" onClick={handleClear} />
                     </div>
                     <div className="option-row">
-                        <Button size="tiny" isHighlighted={pencil} onClick={handlePickPencil} text="Pencil &#9998;"/>
+                        <Button size="tiny" isHighlighted={pencil} onClick={handlePickPencil} text="Pencil"/>
                         <Button size="tiny" isHighlighted={eraser} onClick={handlePickEraser} text="Eraser"/>
                     </div>
                 </div>
                 <div className="line"></div>
                 <div className="submit-button-container">
-                    <Button size="small" text="Submit &#8594;" onClick={handleSubmit} />
+                    <Button size="small" text="Submit" onClick={handleSubmit} />
                 </div>
             </div>
             <div className="stage-container padding">
