@@ -7,17 +7,17 @@
 }
 
 .new-game-container p {
-    padding: 1em 2em;
+    padding: 2vh 4vh;
     color: red;
 }
 
 h1 {
     margin: 0;
-    padding: 0.5em;
+    padding: 4.5vh;
 }
 
 .drop-down-container {
-    padding: 0.5em;
+    padding: 1vh;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -25,7 +25,7 @@ h1 {
 }
 
 .drop-down {
-    width: 14em;
+    width: 25vh;
     font-size: 20px;
 }
 
@@ -42,6 +42,6 @@ h1 {
 }
 
 .check-box {
-    width: 1.5em;
-    height: 1.5em;
+    width: 2.5vh;
+    height: 2.5vh;
 }
