@@ -1,6 +1,6 @@
 .button {
     border: none;
-    border-radius: 2em;
+    border-radius: 4vh;
     cursor: pointer;
     outline: none;
     color: white;
@@ -8,9 +8,9 @@
 }
 
 .button.large {
-    width: 12em;
-    height: 2em;
-    font-size: 1.8em;
+    width: 40vh;
+    height: 7vh;
+    font-size: 3.5vh;
 }
 
 .button.large:hover {
@@ -22,8 +22,8 @@
 }
 
 .button.medium {
-    width: 8em;
-    height: 2em;
+    width: 14vw;
+    height: 7vh;
     font-size: 1.8em;
 }
 
@@ -36,9 +36,9 @@
 }
 
 .button.small {
-    font-size: 1.8em;
-    width: 4.8em;
-    height: 1.3em;
+    font-size: 4vh;
+    width: 10vw;
+    height: 7vh;
 }
 
 .button.small:hover {
@@ -50,9 +50,9 @@
 }
 
 .button.tiny {
-    font-size: 0.8em;
-    width: 5em;
-    height: 1.6em;
+    font-size: 3vh;
+    width: 7vw;
+    height: 5vh;
 }
 
 .button.tiny:hover {
@@ -65,4 +65,29 @@
 
 .button.highlighted {
     border: 3px solid red;
+}
+
+@media (max-width: 600px) {
+    .button.large {
+        width: 80vw;
+        height: 7vh;
+    }
+
+    .button.medium {
+        width: 50vw;
+        height: 7vh;
+        font-size: 1.8em;
+    }
+
+    .button.small {
+        width: 35vw;
+        height: 7vh;
+        font-size: 1.8em;
+    }
+
+    .button.tiny {
+        width: 25vw;
+        height: 7vh;
+        font-size: 1.8em;
+    }
 }
