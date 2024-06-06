@@ -1,3 +1,4 @@
+/* Common styles */
 .canvas-container {
     display: flex;
     justify-content: center;
@@ -6,7 +7,7 @@
 }
 
 .padding {
-    padding: 1em;
+    padding: 2vh;
 }
 
 .menu-container {
@@ -15,27 +16,28 @@
     justify-content: center;
     align-items: center;
     font-size: 2em;
+    text-align: center;
 }
 
 .menu-container h1 {
-    font-size: 1.1em;
+    font-size: 6vh;
     padding: 0;
     margin: 0;
 }
 
 .line {
     width: 100%;
-    height: 0.05em;
+    height: 0.2vh;
     background-color: black;
-    margin-top: 0.5em;
-    margin-bottom: 0.5em;
+    margin-top: 2vh;
+    margin-bottom: 2vh;
 }
 
 .pencil-options {
     display: flex;
-    justify-content: space-around;
+    justify-content: space-between;
     align-items: center;
-    width: 10em;
+    width: 25vw;
 }
 
 .pencil-option-container {
@@ -43,15 +45,21 @@
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    width: 4em;
+    width: 12vw;
 }
 
-.pencil-option-container input {
-    height: 2em;
+.color-container {
+    width: 5vh;
+    height: 5vh;
+}
+
+.size-container {
+    width: 15vw;
+    height: 4vh;
 }
 
 .pencil-option-container p {
-    font-size: 0.8em;
+    font-size: 3vh;
 }
 
 .draw-options {
@@ -59,12 +67,12 @@
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    width: 10em;
-    padding: 1em;
+    width: 20vw;
+    padding: 2vh;
 }
 
 .draw-options p {
-    font-size: 0.8em;
+    font-size: 3vh;
 }
 
 .option-row {
@@ -72,9 +80,105 @@
     justify-content: space-around;
     align-items: center;
     width: 100%;
-    padding: 0.2em;
+    padding: 1.5vh;
 }
 
 .submit-button-container {
-    padding-top: 1em;
+    padding-top: 1vh;
+}
+
+.display-orientation-issue {
+    display: none;
+}
+
+/* Hamburger menu styles */
+.hamburger {
+    display: none;
+    flex-direction: column;
+    cursor: pointer;
+    padding: 1vw;
+    border: 1px solid #ccc;
+    border-radius: 1vh;
+    position: absolute;
+    top: 1vh;
+    left: 1vw;
+}
+
+.hamburger div {
+    width: 3.5vw;
+    height: 1vh;
+    background-color: black;
+    margin: 0.5vh 0;
+    transition: all 0.3s ease;
+}
+
+.hamburger-menu {
+    display: none;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    border: #030321 1px solid;
+    max-height: 90vh;
+    min-height: 85vh;
+    min-width: 40vw;
+    max-width: 45vw;
+    background-color: white;
+    position: fixed;
+    top: 2vh;
+    left: 8vw;
+    z-index: 1000;
+    border-radius: 3vh;
+}
+
+.hamburger-word-display {
+    display: none;
+}
+
+.hamburger-menu h1 {
+    display: none;
+}
+
+@media screen and (max-width: 1284px) {
+    .menu-container {
+        display: none;
+    }
+
+    .hamburger-word-display {
+        display: block;
+    }
+
+    .hamburger {
+        display: flex;
+    }
+
+    .hamburger-menu.open {
+        display: flex;
+    }
+}
+
+@media screen and (orientation: portrait) {
+    .display-orientation-issue {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        flex-direction: column;
+        text-align: center;
+    }
+
+    .menu-container {
+        display: none;
+    }
+
+    .stage-container {
+        display: none;
+    }
+
+    .hamburger {
+        display: none;
+    }
+
+    h2 {
+        font-size: 130%;
+    }
 }
