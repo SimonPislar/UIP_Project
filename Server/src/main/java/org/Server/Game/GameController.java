@@ -1,6 +1,7 @@
 package org.Server.Game;
 
 import org.Server.Communications.Sender;
+import org.Server.Game.JSON.SketchbookController;
 import org.Server.ServerController;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -8,6 +9,7 @@ import org.Server.DBMS.User;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
 
 @Component
 public class GameController {
@@ -293,6 +295,16 @@ public class GameController {
         return player.getSketchBook().getOwnersEmail().equals(player.getEmail());
     }
 
+    private void sendSketchbooks(GameSession gameSession, ArrayList<SketchBook> sketchBooks) {
+        for (Player player : gameSession.getPlayers()) {
+            try {
+                sender.sendSketchbookData(player.getEmail(), sketchBooks);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
     private void sendEndGame(GameSession gameSession) {
         gameSession.getGameOrder().forEach(player -> {
             String email = player.getEmail();
@@ -303,6 +315,10 @@ public class GameController {
                 e.printStackTrace();
             }
         });
+        ArrayList<SketchBook> sketchBooks = new ArrayList<>();
+        gameSession.getGameOrder().forEach(player -> sketchBooks.add(player.getSketchBook()));
+        Runnable sendSketchbooks = () -> sendSketchbooks(gameSession, sketchBooks);
+        serverController.scheduleAsyncTask(sendSketchbooks, 2);
     }
 
     public boolean addGuess(String email, String guess) {
@@ -337,5 +353,21 @@ public class GameController {
             }
         }
         return true;
+    }
+
+    private void sendSketchbooks(String email, ArrayList<SketchBook> sketchBooks) {
+        try {
+            sender.sendSketchbookData(email, sketchBooks);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void sendSketchbookData(String email) {
+        GameSession gameSession = getGameSession(getGameSessionName(email));
+        ArrayList<SketchBook> sketchBooks = new ArrayList<>();
+        gameSession.getGameOrder().forEach(player -> sketchBooks.add(player.getSketchBook()));
+        Runnable sendSketchbooks = () -> sendSketchbooks(email, sketchBooks);
+        serverController.scheduleAsyncTask(sendSketchbooks, 2);
     }
 }
