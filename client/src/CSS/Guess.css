@@ -7,7 +7,7 @@
 }
 
 .guess-container h1 {
-    font-size: 4em;
+    font-size: 8vh;
     margin: 0;
     padding: 0;
 }
@@ -16,4 +16,23 @@
     width: 35em;
     height: 25em;
     border: 0.1em solid black;
+}
+
+.guess-item {
+    padding: 1vh;
+}
+
+@media (max-width: 600px) {
+    .drawing {
+        max-width: 90vw;
+        max-height: 45vh;
+    }
+
+    .guess-container {
+        text-align: center;
+    }
+
+    .guess-container h1 {
+        font-size: 5vh;
+    }
 }
