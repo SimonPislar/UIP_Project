@@ -128,10 +128,10 @@ function Lobby() {
                 </div>
             </div>
             <div className="buttons-container">
-                <Button size="medium" text="Leave" onClick={handleLeave} /> {/* Implement Leave button */}
                 {isHost &&
                     <Button size="medium" text="Start" onClick={handleStart} /> /* Implement Start button */
                 }
+                <Button size="medium" text="Leave" onClick={handleLeave} /> {/* Implement Leave button */}
             </div>
         </div>
     );
