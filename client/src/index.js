@@ -18,6 +18,7 @@ import WaitingForServer from "./WaitingForServer";
 import Canvas from "./Canvas";
 import Guess from "./Guess";
 import DisplayGameResult from "./DisplayGameResult";
+import Tutorial from "./Tutorial";
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
@@ -38,6 +39,7 @@ root.render(
             <Route path="/canvas" element={<Canvas />} />
             <Route path="/guess" element={<Guess />} />
             <Route path="display-end-game" element={<DisplayGameResult />} />
+            <Route path="/tutorial" element={<Tutorial />} />
         </Routes>
     </BrowserRouter>
 );
