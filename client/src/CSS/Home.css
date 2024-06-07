@@ -3,11 +3,13 @@
     justify-content: center;
     align-items: center;
     flex-direction: column;
-    height: 100vh;
 }
 
 .home-container {
-
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    height: 100vh;
 }
 
 .img-container {
@@ -29,6 +31,12 @@ h1 {
     position: absolute;
     bottom: 0;
     left: 0;
+}
+
+@media  screen and (max-width: 790px){
+    .painter-container {
+        display: none;
+    }
 }
 
 @media (max-width: 620px) {
