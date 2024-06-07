@@ -1,9 +1,9 @@
 import React from "react";
 import './CSS/Input.css';
 
-function Input({ type, placeholder, value, onChange }) {
+function Input({ type, placeholder, value, onChange, onFocus, onBlur, ref }) {
     return (
-        <input className="input" type={type} value={value} onChange={onChange} placeholder={placeholder}/>
+        <input className="input" ref={ref} onBlur={onBlur} onFocus={onFocus} type={type} value={value} onChange={onChange} placeholder={placeholder}/>
     );
 }
 
