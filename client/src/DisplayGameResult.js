@@ -10,6 +10,8 @@ function DisplayGameResult() {
     const location = useLocation();
     const queryParams = new URLSearchParams(location.search);
     const email = queryParams.get('email');
+    const tutorialString = queryParams.get('tutorial');
+    const tutorial = tutorialString === 'true';
 
     const headerRef = useRef(null);
     const navigate = useNavigate();
@@ -17,6 +19,8 @@ function DisplayGameResult() {
     const [sketchbooks, setSketchbooks] = useState([]);
     const [currentSketchbookIndex, setCurrentSketchbookIndex] = useState(0);
     const [isOpen, setIsOpen] = useState(false);
+    const [pressedOpen, setPressedOpen] = useState(false);
+    const [tutorialOver, setTutorialOver] = useState(false);
 
     const WS_URL = 'ws://192.168.0.17:8080/ws';
     const IP = 'http://192.168.0.17:8080'
@@ -87,6 +91,8 @@ function DisplayGameResult() {
 
     const toggleOpen = () => {
         setIsOpen(!isOpen);
+        setPressedOpen(true);
+        setTutorialOver(true);
     };
 
     const getJSONData = () => {
@@ -116,19 +122,15 @@ function DisplayGameResult() {
             }
         }).then((response) => response.json())
             .then((data) => {
-                if (data.success) {
-                    console.log(data.message);
-                    navigate(`/home?email=${encodeURIComponent(email)}`);
-                } else {
-                    console.log(data.message);
-                }
+                console.log(data.message);
+                navigate(`/home?email=${encodeURIComponent(email)}`);
             }
         );
     }
 
     return (
         <div className="display-page-container">
-            <button className="get-json" onClick={getJSONData}>Reload sketchbooks</button>
+            {/*<button className="get-json" onClick={getJSONData}>Reload sketchbooks</button>*/}
             {!isOpen &&
                 <h1 ref={headerRef} className="bouncing-header">Final game state</h1>
             }
@@ -150,7 +152,15 @@ function DisplayGameResult() {
                                     )}
                                 </div>
                                 <div className="main-button">
-                                    <Button size={"small"} onClick={toggleOpen} text={isOpen ? 'Close' : 'Open'} />
+                                    {tutorial && !pressedOpen &&
+                                        <button onClick={toggleOpen} className="begin-button-small show">{isOpen ? 'Close' : 'Open'}</button>
+                                    }
+                                    {!tutorial &&
+                                        <Button size={"small"} onClick={toggleOpen} text={isOpen ? 'Close' : 'Open'} />
+                                    }
+                                    {tutorial && tutorialOver &&
+                                        <Button size={"small"} onClick={toggleOpen} text={isOpen ? 'Close' : 'Open'} />
+                                    }
                                 </div>
                                 <div className="side-button">
                                     {sketchbooks.length > 0 && currentSketchbookIndex !== sketchbooks.length - 1 && (
@@ -181,7 +191,15 @@ function DisplayGameResult() {
                 </div>
             </div>
             <footer>
-                <Button onClick={handleExit} size="medium" text="Exit"/>
+                {tutorial && tutorialOver &&
+                    <button onClick={handleExit} className="begin-button-medium show">End tutorial</button>
+                }
+                {tutorial && !tutorialOver &&
+                    <Button onClick={handleExit} size="medium" text="End tutorial"/>
+                }
+                {!tutorial &&
+                    <Button onClick={handleExit} size="medium" text="Exit"/>
+                }
             </footer>
         </div>
     );
