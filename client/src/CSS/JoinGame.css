@@ -1,10 +1,16 @@
 .join-game-container {
     display: flex;
+    align-items: center;
+    justify-content: space-around;
+    height: 100vh;
+    padding: 1em;
+}
+
+.join-game {
+    display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    height: 100vh;
-    padding: 1em;
 }
 
 .lobby-list-container {
@@ -34,6 +40,12 @@
 
 .join-button-container {
     padding: 2em;
+}
+
+@media  screen and (max-width: 1085px){
+    .painter-container {
+        display: none;
+    }
 }
 
 /* Media query for phones */
