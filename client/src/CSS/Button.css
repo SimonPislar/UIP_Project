@@ -24,7 +24,7 @@
 .button.medium {
     width: 14vw;
     height: 7vh;
-    font-size: 1.8em;
+    font-size: 3.5vh;
 }
 
 .button.medium:hover {
@@ -36,7 +36,7 @@
 }
 
 .button.small {
-    font-size: 4vh;
+    font-size: 3.5vh;
     width: 10vw;
     height: 7vh;
 }
