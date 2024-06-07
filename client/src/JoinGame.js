@@ -92,22 +92,30 @@ function JoinGame() {
 
     return (
         <div className="join-game-container">
-            <div>
-                <h1>Choose lobby</h1>
+            <div className="painter-container">
+                <img className="painter-img" src="/img/painter-girl.png" alt="painter"></img>
             </div>
-            <div className="lobby-list-container">
-                {lobbies.map((lobby, index) => (
-                    <div
-                        key={index}
-                        className={`lobby-item ${selectedLobby === lobby ? 'selected' : ''}`}
-                        onClick={() => handleLobbyClick(lobby)}
-                    >
-                        {lobby}
-                    </div>
-                ))}
+            <div className="join-game">
+                <div>
+                    <h1>Choose lobby</h1>
+                </div>
+                <div className="lobby-list-container">
+                    {lobbies.map((lobby, index) => (
+                        <div
+                            key={index}
+                            className={`lobby-item ${selectedLobby === lobby ? 'selected' : ''}`}
+                            onClick={() => handleLobbyClick(lobby)}
+                        >
+                            {lobby}
+                        </div>
+                    ))}
+                </div>
+                <div className="join-button-container">
+                    <Button size="medium" text="Join" onClick={handleJoin} disabled={!selectedLobby}/>
+                </div>
             </div>
-            <div className="join-button-container">
-                <Button size="medium" text="Join" onClick={handleJoin} disabled={!selectedLobby}/>
+            <div className="painter-container">
+                <img className="painter-img" src="/img/painter-boy.png" alt="painter"></img>
             </div>
         </div>
     );
