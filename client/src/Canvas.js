@@ -1,38 +1,37 @@
 import React, { useRef, useEffect, useState } from 'react';
 import { Stage, Layer, Rect, Line } from 'react-konva';
-import Konva from 'konva';
 import './CSS/Canvas.css';
-import {useLocation, useNavigate} from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import Button from "./Button";
-import useWebSocket from "react-use-websocket";
+import newspaper from './media/newspaper-scrap.mp3';
 
 function Canvas() {
-
     const IP = 'http://192.168.0.17:8080';
-    const WS_URL = 'ws://192.168.0.17:8080/ws';
-
     const navigate = useNavigate();
 
     const [drawingColor, setDrawingColor] = useState('#000000');
     const [lineWidth, setLineWidth] = useState(2);
     const [canvasDimensions, setCanvasDimensions] = useState({ width: window.innerWidth * 0.8, height: window.innerHeight * 0.8 });
     const [lines, setLines] = useState([]);
+    const [tutorialLine, setTutorialLine] = useState([]);
     const [pencil, setPencil] = useState(true);
     const [eraser, setEraser] = useState(false);
     const [originalSize, setOriginalSize] = useState(1);
     const [originalColor, setOriginalColor] = useState('#000000');
     const [isMenuOpen, setIsMenuOpen] = useState(false);
 
-
     const isDrawing = useRef(false);
     const stageRef = useRef(null);
     const drawingColorRef = useRef(drawingColor);
     const lineWidthRef = useRef(lineWidth);
+    const animationRef = useRef(null);
 
     const location = useLocation();
     const queryParams = new URLSearchParams(location.search);
     const email = queryParams.get('email');
     const word = queryParams.get('word');
+    const tutorialString = queryParams.get('tutorial');
+    const tutorial = tutorialString === 'true';
 
     const [time, setTime] = useState(120);
 
@@ -51,6 +50,8 @@ function Canvas() {
 
     const handleClear = () => {
         setLines([]);
+        const newspaperSound = new Audio(newspaper);
+        newspaperSound.play().then(r => console.log('Paper sound played'));
     };
 
     const handleSubmit = () => {
@@ -67,14 +68,18 @@ function Canvas() {
             }
         }).then((response) => response.json())
             .then((data) => {
-                if (data.success) {
-                    console.log(data.message);
-                    navigate(`/waiting-for-server?email=${encodeURIComponent(email)}`);
-                } else {
-                    console.log(data.message);
+                    if (data.success) {
+                        console.log(data.message);
+                        if (tutorial) {
+                            navigate(`/waiting-for-server?email=${encodeURIComponent(email)}&tutorial=true`);
+                            return;
+                        }
+                        navigate(`/waiting-for-server?email=${encodeURIComponent(email)}`);
+                    } else {
+                        console.log(data.message);
+                    }
                 }
-            }
-        );
+            );
     }
 
     const handlePickPencil = () => {
@@ -101,7 +106,7 @@ function Canvas() {
         };
 
         window.addEventListener('resize', handleResize);
-        handleResize(); // Initialize with current window size
+        handleResize();
 
         return () => {
             window.removeEventListener('resize', handleResize);
@@ -113,6 +118,10 @@ function Canvas() {
 
         const handleMouseDown = () => {
             isDrawing.current = true;
+            if (animationRef.current) {
+                clearInterval(animationRef.current);
+                setTutorialLine([]);
+            }
             const pos = stage.getPointerPosition();
             const newLine = {
                 stroke: drawingColorRef.current,
@@ -151,6 +160,27 @@ function Canvas() {
             window.removeEventListener('touchend', handleMouseUp);
         };
     }, [canvasDimensions, lines]);
+
+    useEffect(() => {
+        if (tutorial) {
+            const moveLine = () => {
+                setTutorialLine(prevLine => {
+                    const newPoints = [...prevLine];
+                    const stage = stageRef.current.getStage();
+                    const maxWidth = stage.width();
+                    const maxHeight = stage.height();
+                    const newX = newPoints.length > 0 ? newPoints[newPoints.length - 2] + (Math.random() - 0.5) * 60 : Math.random() * maxWidth;
+                    const newY = newPoints.length > 0 ? newPoints[newPoints.length - 1] + (Math.random() - 0.5) * 60 : Math.random() * maxHeight;
+                    newPoints.push(newX < 0 ? 0 : newX > maxWidth ? maxWidth : newX, newY < 0 ? 0 : newY > maxHeight ? maxHeight : newY);
+                    return newPoints;
+                });
+            };
+
+            animationRef.current = setInterval(moveLine, 100);
+
+            return () => clearInterval(animationRef.current);
+        }
+    }, [tutorial]);
 
     return (
         <div className="canvas-container">
@@ -201,14 +231,27 @@ function Canvas() {
                 </div>
                 <div className="line"></div>
                 <div className="submit-button-container">
-                    <Button size="small" text="Submit" onClick={handleSubmit} />
+                    {!tutorial &&
+                        <Button size="small" text="Submit" onClick={handleSubmit} />
+                    }
+                    {tutorial &&
+                        <button className="begin-button-small show" onClick={handleSubmit}>Submit</button>
+                    }
                 </div>
             </div>
-            <div className="hamburger" onClick={toggleMenu}>
-                <div></div>
-                <div></div>
-                <div></div>
-            </div>
+            {tutorial &&
+                <div className="hamburger tutorial-burger" onClick={toggleMenu}>
+                    <div></div>
+                    <div></div>
+                    <div></div>
+                </div>
+            }
+            {!tutorial &&
+                <div className="hamburger" onClick={toggleMenu}>
+                    <div></div>
+                    <div></div>
+                    <div></div>
+                </div>}
             <div className="menu-container padding">
                 <div>
                     <h1>Draw: {word}</h1>
@@ -253,13 +296,28 @@ function Canvas() {
                 </div>
                 <div className="line"></div>
                 <div className="submit-button-container">
-                    <Button size="small" text="Submit" onClick={handleSubmit} />
+                    {!tutorial &&
+                        <Button size="small" text="Submit" onClick={handleSubmit} />
+                    }
+                    {tutorial &&
+                        <button className="begin-button-small show" onClick={handleSubmit}>Submit</button>
+                    }
                 </div>
             </div>
             <div className="stage-container padding">
                 <Stage width={canvasDimensions.width} height={canvasDimensions.height} ref={stageRef}>
                     <Layer>
                         <Rect x={0} y={0} width={canvasDimensions.width} height={canvasDimensions.height} fill="white" />
+                        {tutorial && tutorialLine.length > 0 && (
+                            <Line
+                                points={tutorialLine}
+                                stroke="rgba(0, 0, 255, 0.5)"
+                                strokeWidth={5}
+                                tension={0.5}
+                                lineCap="round"
+                                lineJoin="round"
+                            />
+                        )}
                     </Layer>
                     <Layer>
                         {lines.map((line, i) => (
