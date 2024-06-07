@@ -1,9 +1,17 @@
+/* NewGame.css */
+
 .new-game-container {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    height: 100vh;
+}
+
+.new-game {
     display: flex;
     justify-content: center;
     align-items: center;
     flex-direction: column;
-    height: 100vh;
 }
 
 .new-game-container p {
@@ -17,11 +25,12 @@ h1 {
 }
 
 .drop-down-container {
-    padding: 1vh;
+    padding: 2vh;
     display: flex;
     justify-content: center;
     align-items: center;
     flex-direction: column;
+    position: relative; /* Add this to position the arrow relative to the container */
 }
 
 .drop-down {
@@ -34,7 +43,7 @@ h1 {
 }
 
 .check-box-container {
-    padding-bottom: 0.5em;
+    padding-bottom: 2vh;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -44,4 +53,17 @@ h1 {
 .check-box {
     width: 2.5vh;
     height: 2.5vh;
+}
+
+.arrow {
+    position: absolute;
+    left: -30px; /* Adjust as needed */
+    font-size: 24px;
+    color: #3498db;
+}
+
+@media  screen and (max-width: 950px){
+    .painter-container {
+        display: none;
+    }
 }
