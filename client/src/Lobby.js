@@ -8,6 +8,9 @@ function Lobby() {
     const location = useLocation();
     const queryParams = new URLSearchParams(location.search);
     const email = queryParams.get('email');
+    const tutorialString = queryParams.get('tutorial');
+    const tutorial = tutorialString === 'true';
+
     const [lobbyName, setLobbyName] = useState('');
     const [lobbyFetched, setLobbyFetched] = useState(false);
     const [players, setPlayers] = useState([]);
@@ -102,6 +105,10 @@ function Lobby() {
             console.log(lastJsonMessage);
             if (lastJsonMessage.message === 'Start') {
                 console.log("Received Start message");
+                if (tutorial) {
+                    navigate(`/input-word?email=${encodeURIComponent(email)}&tutorial=true`);
+                    return;
+                }
                 navigate(`/input-word?email=${encodeURIComponent(email)}`);
             } else if (lastJsonMessage.message === 'playerjoined') {
                 console.log("Received PlayerJoined message");
@@ -115,23 +122,34 @@ function Lobby() {
 
     return (
         <div className="lobby-container">
-            <div>
-                {lobbyFetched && <h1>{lobbyName}</h1>}
+            <div className="painter-container">
+                <img className="painter-img" src="/img/painter-girl.png" alt="painter"></img>
             </div>
-            <div className="players-list-container">
-                <div className="players-list">
-                    {players.map((player, index) => (
-                        <div key={index} className="player-item">
-                            {player}
-                        </div>
-                    ))}
+            <div className="lobby">
+                <div>
+                    {lobbyFetched && <h1>{lobbyName}</h1>}
+                </div>
+                <div className="players-list-container">
+                    <div className="players-list">
+                        {players.map((player, index) => (
+                            <div key={index} className="player-item">
+                                {player}
+                            </div>
+                        ))}
+                    </div>
+                </div>
+                <div className="buttons-container">
+                    {isHost && !tutorial &&
+                        <Button size="medium" text="Start" onClick={handleStart} /> /* Implement Start button */
+                    }
+                    {isHost && tutorial &&
+                        <button className="begin-button-medium show" onClick={handleStart}>Start</button> /* Implement Start button */
+                    }
+                    <Button size="medium" text="Leave" onClick={handleLeave} /> {/* Implement Leave button */}
                 </div>
             </div>
-            <div className="buttons-container">
-                {isHost &&
-                    <Button size="medium" text="Start" onClick={handleStart} /> /* Implement Start button */
-                }
-                <Button size="medium" text="Leave" onClick={handleLeave} /> {/* Implement Leave button */}
+            <div className="painter-container">
+                <img className="painter-img" src="/img/painter-boy.png" alt="painter"></img>
             </div>
         </div>
     );
