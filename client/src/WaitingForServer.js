@@ -6,6 +6,8 @@ function WaitingForServer() {
     const location = useLocation();
     const queryParams = new URLSearchParams(location.search);
     const email = queryParams.get('email');
+    const tutorialString = queryParams.get('tutorial');
+    const tutorial = tutorialString === 'true';
 
     const navigate = useNavigate();
 
@@ -24,11 +26,26 @@ function WaitingForServer() {
             console.log(lastJsonMessage);
             if (lastJsonMessage.message === 'word') {
                 console.log("Received word message:", lastJsonMessage.word);
+                if (tutorial) {
+                    navigate(`/canvas?email=${encodeURIComponent(email)}&word=${encodeURIComponent(lastJsonMessage.word)}&tutorial=true`);
+                    return;
+                }
                 navigate(`/canvas?email=${encodeURIComponent(email)}&word=${encodeURIComponent(lastJsonMessage.word)}`);
                 // Handle the received word here
             } else if (lastJsonMessage.message === 'drawing') {
                 console.log("Received Drawing message:", lastJsonMessage.data);
                 const dataToPass = { drawing: lastJsonMessage.data };
+                if (tutorial) {
+                    navigate(
+                        `/guess?email=${encodeURIComponent(email)}&tutorial=true`,
+                        {
+                            state: {
+                                drawing: dataToPass
+                            }
+                        }
+                    )
+                    return;
+                }
                 navigate(
                     `/guess?email=${encodeURIComponent(email)}`,
                     {
@@ -39,6 +56,10 @@ function WaitingForServer() {
                 )
             } else if (lastJsonMessage.message === 'gameend') {
                 console.log("Received game over message");
+                if (tutorial) {
+                    navigate(`/display-end-game?email=${encodeURIComponent(email)}&tutorial=true`);
+                    return;
+                }
                 navigate(`/display-end-game?email=${encodeURIComponent(email)}`);
             } else if (lastJsonMessage.message === 'guess') {
                 console.log("Received new game message");
