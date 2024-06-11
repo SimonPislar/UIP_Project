@@ -8,6 +8,7 @@ This is a project for the course User Interface Programming. The project is a we
 The game is best played with at least 4 players.
 
 ## Running the application
+All instructions are sure to work on MacOS. If you are using another operating system, some parts of the instructions might have to be altered.
 ### Server
 The folliwng instructions are for running the server.
 #### Install Java
