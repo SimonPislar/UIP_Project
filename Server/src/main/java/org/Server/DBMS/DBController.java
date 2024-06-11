@@ -3,11 +3,13 @@ package org.Server.DBMS;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+// This class is responsible for interacting with the database.
 @Component
 public class DBController {
 
     private final UserRepository userRepository;
 
+    // Auto-wired means that Spring will automatically create an instance of UserRepository and pass it to the constructor.
     @Autowired
     public DBController(UserRepository userRepository) {
         this.userRepository = userRepository;
