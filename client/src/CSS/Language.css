@@ -1,0 +1,17 @@
+.language-page-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+}
+
+.language-option {
+    padding: 1vh;
+}
+
+@media (max-width: 768px) {
+    .language-page-container {
+        text-align: center;
+    }
+}
