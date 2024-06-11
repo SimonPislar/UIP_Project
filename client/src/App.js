@@ -1,17 +1,16 @@
 import React, { useState, useEffect } from 'react';
 import './CSS/App.css';
-import Button from './Button';
-import Input from "./Input";
-import Canvas from "./Canvas";
-import {useNavigate} from "react-router-dom";
+import { useNavigate } from "react-router-dom";
+import { useLanguage } from './LanguageContext';
+import clientConfig from './clientConfig.json';
 
 function App() {
     const [isConnected, setIsConnected] = useState(false);
+    const { translations } = useLanguage();
+
     const navigate = useNavigate();
-
-    const delayInMilliseconds = 2000; //1 second
-
-    const IP = 'http://192.168.0.17:8080'
+    const delayInMilliseconds = 2000; // 2 seconds
+    const IP = clientConfig.serverIP;
 
     const establishConnection = async () => {
         try {
@@ -20,7 +19,7 @@ function App() {
             console.log(data);
             if (data.success) {
                 console.log('Connection established successfully!');
-                setTimeout(function() {
+                setTimeout(() => {
                     navigate('/sign-in');
                 }, delayInMilliseconds);
                 setIsConnected(true);
@@ -33,27 +32,25 @@ function App() {
     };
 
     useEffect(() => {
-        console.log('Component mounted');
         const connect = async () => {
-            console.log('Connecting...');
             await establishConnection();
         };
-        connect(); // TODO: handle promise
+        connect();
     }, []);
 
     return (
         <div className="app-container">
             <div>
-                <h1>Ryktet går!</h1>
+                <h1>{translations.applicationName}</h1>
             </div>
             {!isConnected && (
                 <div>
-                    <p>Connecting...</p>
+                    <p>{translations.connecting}</p>
                 </div>
             )}
             {isConnected && (
                 <div>
-                    <p>Connection established successfully!</p>
+                    <p>{translations.connectionEstablished}</p>
                 </div>
             )}
         </div>
