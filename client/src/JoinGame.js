@@ -3,18 +3,30 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import './CSS/JoinGame.css';
 import Button from "./Button";
 import useWebSocket from "react-use-websocket";
+import {useLanguage} from "./LanguageContext";
+import clientConfig from './clientConfig.json';
 
 function JoinGame() {
+
+    const {translations} = useLanguage();
+
+    // The state variables
     const [lobbies, setLobbies] = useState([]);
     const [selectedLobby, setSelectedLobby] = useState('');
+
+    // Get the email from the URL
     const location = useLocation();
-    const navigate = useNavigate();
     const queryParams = new URLSearchParams(location.search);
     const email = queryParams.get('email');
 
-    const IP = 'http://192.168.0.17:8080';
-    const WS_URL = 'ws://192.168.0.17:8080/ws';
+    // The navigate function from react-router-dom
+    const navigate = useNavigate();
 
+    // The IP address and WebSocket URL
+    const IP = clientConfig.serverIP;
+    const WS_URL = clientConfig.serverWS;
+
+    // Get the lobbies from the server
     const getLobbies = async () => {
         const response = await fetch(IP + '/receiver/get-lobbies');
         const data = await response.json();
@@ -25,6 +37,7 @@ function JoinGame() {
         }
     };
 
+    // Check if the player is in a lobby by asking the server
     const checkPlayerInLobby = async () => {
         const formData = new URLSearchParams();
         formData.append('email', email);
@@ -38,6 +51,7 @@ function JoinGame() {
             .then((data) => {
                 if (data.success) {
                     console.log(data.message);
+                    // if the player already is in a lobby, navigate to the lobby
                     navigate(`/lobby?email=${encodeURIComponent(email)}`);
                 } else {
                     console.log(data.message);
@@ -45,10 +59,13 @@ function JoinGame() {
             });
     };
 
+    // Use the WebSocket hook to connect to the server
     const { sendJsonMessage, lastJsonMessage } = useWebSocket(WS_URL, {
+        // Pass the email as a query parameter
         queryParams: { email: email }
     });
 
+    // When a message is received from the websocket, update the lobbies state
     useEffect(() => {
         if (lastJsonMessage) {
             console.log(lastJsonMessage);
@@ -58,16 +75,20 @@ function JoinGame() {
         }
     }, [lastJsonMessage]);
 
+    // Check if the player is in a lobby by asking the server (everytime the component is rendered)
     useEffect(() => {
         checkPlayerInLobby();
         getLobbies();
     }, []);
 
+    // Handle the lobby click
     const handleLobbyClick = (lobby) => {
         setSelectedLobby(lobby);
     };
 
+    // Handle the join button
     const handleJoin = () => {
+        // Only works if a lobby is selected
         if (selectedLobby) {
             const formData = new URLSearchParams();
             formData.append('email', email);
@@ -82,6 +103,7 @@ function JoinGame() {
                 .then((data) => {
                     if (data.success) {
                         console.log(data.message);
+                        // navigate to the lobby (if the player joined successfully)
                         navigate(`/lobby?email=${encodeURIComponent(email)}`);
                     } else {
                         console.log(data.message);
@@ -90,6 +112,7 @@ function JoinGame() {
         }
     };
 
+    // The JSX to render
     return (
         <div className="join-game-container">
             <div className="painter-container">
@@ -97,7 +120,7 @@ function JoinGame() {
             </div>
             <div className="join-game">
                 <div>
-                    <h1>Choose lobby</h1>
+                    <h1>{translations.chooseLobby}</h1>
                 </div>
                 <div className="lobby-list-container">
                     {lobbies.map((lobby, index) => (
@@ -111,7 +134,7 @@ function JoinGame() {
                     ))}
                 </div>
                 <div className="join-button-container">
-                    <Button size="medium" text="Join" onClick={handleJoin} disabled={!selectedLobby}/>
+                    <Button size="medium" text={translations.join} onClick={handleJoin} disabled={!selectedLobby}/>
                 </div>
             </div>
             <div className="painter-container">

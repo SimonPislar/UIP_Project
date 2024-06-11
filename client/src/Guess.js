@@ -3,39 +3,63 @@ import {useLocation, useNavigate} from "react-router-dom";
 import './CSS/Guess.css';
 import Input from "./Input";
 import Button from "./Button";
+import {useLanguage} from "./LanguageContext";
+import clientConfig from './clientConfig.json';
 
 function Guess() {
 
-    const IP = 'http://192.168.0.17:8080'
+    // This is the translations object from the LanguageContext
+    const {translations} = useLanguage();
+
+    // This is the IP address of the server
+    const IP = clientConfig.serverIP;
+    // This is the navigate function from react-router-dom
     const navigate = useNavigate();
+
+    // This is the drawing data that is passed from the previous page (not visible in the url)
     const { state } = useLocation();
     const rawDrawingData = state.drawing;
 
+    // This is the email and tutorial status that is passed from the previous page (visible in url)
     const location = useLocation();
     const queryParams = new URLSearchParams(location.search);
     const email = queryParams.get('email');
     const tutorialString = queryParams.get('tutorial');
-    const tutorial = tutorialString === 'true';
 
+    // Global variables
+    const tutorial = tutorialString === 'true';
     const [isFocused, setIsFocused] = useState(false);
     const inputRef = useRef(null);
     const typingIntervalRef = useRef(null);
-
     const [guess, setGuess] = useState('');
 
+    /*
+        @Brief: This function is called when the guess input is changed
+     */
     const handleGuessChange = (event) => {
         setGuess(event.target.value)
     }
 
+    /*
+        @Brief: This function is called when the input is focused. It resets the guess state.
+     */
     const handleInputFocus = () => {
         setIsFocused(true);
         setGuess('');
     };
 
+    /*
+        @Brief: This function is called when the input is blurred. It sets the isFocused state to false.
+     */
     const handleInputBlur = () => {
         setIsFocused(false);
     };
 
+    /*
+        @Brief: This function is called when the submit button is clicked. It sends the guess to the server.
+        @Note: This function sends a POST request to the server with the email and guess data.
+               If successful, it navigates to the waiting-for-server page.
+     */
     const handleGuess = () => {
         console.log('Submit guess: ' + guess);
         const formData = new URLSearchParams();
@@ -63,6 +87,10 @@ function Guess() {
         );
     }
 
+    /*
+        @Brief: This function is called when the component is mounted. It starts the typing animation for the guess input.
+        @Note: This function starts the typing animation only if the tutorial is enabled and the guess is empty.
+     */
     useEffect(() => {
         const startTyping = () => {
             if (tutorial && guess === '') {
@@ -91,6 +119,7 @@ function Guess() {
         }
     }, [isFocused, tutorial]);
 
+    // This is the JSX code for the Guess component
     return (
         <div className="guess-container">
             <div className="painter-container">
@@ -98,7 +127,7 @@ function Guess() {
             </div>
             <div className="guess">
                 <div className="guess-item">
-                    <h1>Guess the Drawing</h1>
+                    <h1>{translations.guessTheDrawing}</h1>
                 </div>
                 <div className="guess-item">
                     <img className="drawing" src={rawDrawingData.drawing} alt="Drawing to guess" />
@@ -106,21 +135,21 @@ function Guess() {
                 <div className="guess-item">
                     {tutorial && (
                         <div>
-                            <Input type="text" ref={inputRef} onFocus={handleInputFocus} onBlur={handleInputBlur} value={guess} onChange={handleGuessChange} placeholder="Guess" />
+                            <Input type="text" ref={inputRef} onFocus={handleInputFocus} onBlur={handleInputBlur} value={guess} onChange={handleGuessChange} placeholder={translations.guess} />
                         </div>
                     )}
                     {!tutorial && (
                         <div>
-                            <Input type="text" value={guess} onChange={handleGuessChange} placeholder="Guess" />
+                            <Input type="text" value={guess} onChange={handleGuessChange} placeholder={translations.guess} />
                         </div>
                     )}
                 </div>
                 <div className="guess-item">
                     {tutorial && (
-                        <button className="begin-button-medium show" onClick={handleGuess}>Submit</button>
+                        <button className="begin-button-medium show" onClick={handleGuess}>{translations.submit}</button>
                     )}
                     {!tutorial && (
-                        <Button size="medium" text="Submit" onClick={handleGuess} />
+                        <Button size="medium" text={translations.submit} onClick={handleGuess} />
                     )}
                 </div>
             </div>
@@ -131,4 +160,5 @@ function Guess() {
     );
 }
 
+// This exports the Guess component (necessary for import in other components)
 export default Guess;

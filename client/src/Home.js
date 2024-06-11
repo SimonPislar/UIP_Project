@@ -3,17 +3,26 @@ import './CSS/Home.css';
 import Button from "./Button";
 import {useLocation, useNavigate} from "react-router-dom";
 import LinkButton from "./LinkButton";
+import {useLanguage} from "./LanguageContext";
+import clientConfig from './clientConfig.json';
 
 function Home() {
 
+    const {translations} = useLanguage();
+
+    // Get the email and tutorial status from the URL
     const location = useLocation();
     const queryParams = new URLSearchParams(location.search);
     const email = queryParams.get('email');
     const tutorialString = queryParams.get('tutorial');
+
+    // Convert the tutorial status to a boolean
     const tutorial = tutorialString === 'true';
 
+    // The navigate function from react-router-dom
     const navigate = useNavigate();
 
+    // Handle the creation of a new game
     const handleNewGame = () => {
         console.log("New game created")
         if (tutorial) {
@@ -23,26 +32,31 @@ function Home() {
         }
     }
 
+    // Handle joining a game
     const handleJoinGame = () => {
         console.log("Joining game")
         navigate(`/join-game?email=${encodeURIComponent(email)}`)
     }
 
+    // Handle the language settings
     const handleLanguage = () => {
         console.log("Language")
-        navigate('/language')
+        navigate(`/language?email=${encodeURIComponent(email)}`)
     }
 
+    // Handle showing the account
     const handleShowAccount = () => {
         console.log("Image pressed")
         navigate(`/account?email=${encodeURIComponent(email)}`)
     }
 
+    // Handle the tutorial
     const handleTutorial = () => {
         console.log("Tutorial")
         navigate(`/tutorial?email=${encodeURIComponent(email)}`)
     }
 
+    // The JSX to render
     return (
         <div className="home-container">
             {!tutorial && (
@@ -52,7 +66,7 @@ function Home() {
             )}
             {!tutorial && (
                 <div className="tutorial-container">
-                    <LinkButton size="medium" text="Don't know how to play?" onClick={handleTutorial}/>
+                    <LinkButton size="medium" text={translations.howTo} onClick={handleTutorial}/>
                 </div>
             )}
             <div className="painter-container">
@@ -60,23 +74,23 @@ function Home() {
             </div>
             <div className="home-menu-container">
                 <div className="button-container">
-                    <h1>Ryktet går!</h1>
+                    <h1>{translations.applicationName}</h1>
                 </div>
                 {!tutorial && (
                     <div className="button-container">
-                        <Button size="large" text="New game" onClick={handleNewGame}/>
+                        <Button size="large" text={translations.newGame} onClick={handleNewGame}/>
                     </div>
                 )}
                 {tutorial && (
                     <div className="button-container">
-                        <button className="begin-button-large show" onClick={handleNewGame}>Begin</button>
+                        <button className="begin-button-large show" onClick={handleNewGame}>{translations.newGame}</button>
                     </div>
                 )}
                 <div className="button-container">
-                    <Button size="large" text="Join game" onClick={handleJoinGame}/>
+                    <Button size="large" text={translations.joinGame} onClick={handleJoinGame}/>
                 </div>
                 <div className="button-container">
-                    <Button size="large" text="Language" onClick={handleLanguage}/>
+                    <Button size="large" text={translations.language} onClick={handleLanguage}/>
                 </div>
             </div>
             <div className="painter-container">
