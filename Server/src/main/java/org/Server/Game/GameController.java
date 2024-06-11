@@ -19,6 +19,7 @@ public class GameController {
     private final ArrayList<GameSession> inactiveGameSessions;
     private final Sender sender;
 
+    // Auto-wired means that Spring will automatically create an instance of ServerController and Sender and pass it to the constructor.
     @Autowired
     public GameController(ServerController serverController, Sender sender) {
         this.activeGameSessions = new ArrayList<>();
@@ -31,6 +32,8 @@ public class GameController {
         @Brief: This function is used to initialize the game.
         @Param: email - The email of the player.
         @Param: sessionName - The name of the session.
+        @Param: playerCount - The number of players in the game.
+        @Return: boolean - Returns true if the game was initialized, false otherwise.
     */
     public boolean initializeGame(String email, String sessionName, int playerCount) {
         User user = this.serverController.getUser(email);
@@ -88,6 +91,11 @@ public class GameController {
         return null;
     }
 
+    /*
+        @Brief: This function is used to get the players in a game session.
+        @Param: sessionName - The name of the session.
+        @Return: ArrayList<String> - Returns the players in the game session.
+    */
     public ArrayList<String> getPlayersInGameSession(String sessionName) {
         ArrayList<GameSession> activeGameSessions = getActiveGameSessions();
         for (GameSession gs : activeGameSessions) {
@@ -137,6 +145,10 @@ public class GameController {
         return true;
     }
 
+    /*
+        @Brief: This function is used to kick all players from the game session.
+        @Param: players - The players to be kicked.
+    */
     private void kickAllPlayers(ArrayList<Player> players) {
         for (Player player : players) {
             try {
@@ -147,6 +159,10 @@ public class GameController {
         }
     }
 
+    /*
+        @Brief: This function is used to remove a player from the game session without checking if the player is the last player.
+        @Param: email - The email of the player.
+    */
     public boolean removePlayerFromGameSessionWithoutCheck(String email) {
         GameSession gameSession = getGameSession(getGameSessionName(email));
         if (gameSession == null) {
@@ -197,6 +213,10 @@ public class GameController {
         });
     }
 
+    /*
+        @Brief: This function is used to prepare the game.
+        @Param: gameSession - The game session to be prepared.
+     */
     private void prepareGame(GameSession gameSession) {
         gameSession.setGameOrder();
         for (int i = 0; i < gameSession.getPlayerCount(); i++) {
@@ -212,8 +232,10 @@ public class GameController {
         }
         // Account for different rules for odd/even player counts
         if (gameSession.getPlayers().size() % 2 != 0) {
+            // Rotates the sketchbooks so that a player doesn't get their own sketchbook
             gameSession.rotateSketchBooks();
         }
+        // Send the original words to the players
         for (Player player : gameSession.getPlayers()) {
             String playerEmail = player.getEmail();
             String originalWord = player.getSketchBook().getOriginalWord();
@@ -247,6 +269,10 @@ public class GameController {
         return true;
     }
 
+    /*
+        @Brief: This function is used to send the drawings to the players.
+        @Param: gameSession - The game session.
+     */
     private void sendDrawings(GameSession gameSession) {
         gameSession.getGameOrder().forEach(player -> {
             String email = player.getEmail();
@@ -260,6 +286,12 @@ public class GameController {
         });
     }
 
+    /*
+        @Brief: This function is used to add a drawing to the game session.
+        @Param: email - The email of the player.
+        @Param: rawDrawingData - The raw drawing data.
+        @Return: boolean - Returns true if the drawing was added, false otherwise.
+     */
     public boolean addDrawing(String email, String rawDrawingData) {
         GameSession gameSession = getGameSession(getGameSessionName(email));
         if (gameSession == null) {
@@ -281,6 +313,7 @@ public class GameController {
                 break;
             }
         }
+        // If all drawings have been received, send the drawings to the players
         if (allDrawingsReceived) {
             gameSession.rotateSketchBooks();
             Runnable sendDrawings = () -> sendDrawings(gameSession);
@@ -289,6 +322,10 @@ public class GameController {
         return true;
     }
 
+    /*
+        @Brief: This function is used to send the guesses to the players.
+        @Param: gameSession - The game session.
+     */
     private void sendGuesses(GameSession gameSession) {
         gameSession.getGameOrder().forEach(player -> {
             String email = player.getEmail();
@@ -302,11 +339,17 @@ public class GameController {
         });
     }
 
+    // This function is used to check if the game is finished.
     private boolean gameIsFinished(GameSession gameSession) {
         Player player = gameSession.getGameOrder().get(0);
         return player.getSketchBook().getOwnersEmail().equals(player.getEmail());
     }
 
+    /*
+        @Brief: This function is used to send the sketchbooks to the players.
+        @Param: gameSession - The game session.
+        @Param: sketchBooks - The sketchbooks to be sent.
+     */
     private void sendSketchbooks(GameSession gameSession, ArrayList<SketchBook> sketchBooks) {
         for (Player player : gameSession.getPlayers()) {
             try {
@@ -317,6 +360,10 @@ public class GameController {
         }
     }
 
+    /*
+        @Brief: This function is used to send the end game message to the players.
+        @Param: gameSession - The game session.
+     */
     private void sendEndGame(GameSession gameSession) {
         gameSession.getGameOrder().forEach(player -> {
             String email = player.getEmail();
@@ -333,6 +380,12 @@ public class GameController {
         serverController.scheduleAsyncTask(sendSketchbooks, 2);
     }
 
+    /*
+        @Brief: This function is used to add a guess to the game session.
+        @Param: email - The email of the player.
+        @Param: guess - The guess to be added.
+        @Return: boolean - Returns true if the guess was added, false otherwise.
+     */
     public boolean addGuess(String email, String guess) {
         GameSession gameSession = getGameSession(getGameSessionName(email));
         if (gameSession == null) {
@@ -353,10 +406,13 @@ public class GameController {
                 break;
             }
         }
+        // If all guesses have been received, rotate the sketchbooks and send the guesses to the players
         if (allGuessesReceived) {
             gameSession.rotateSketchBooks();
+            // Check if the game is finished
             if (gameIsFinished(gameSession)) {
                 System.out.println(gameSession.getSessionName() + " is finished!");
+                // Send the end game message to the players
                 Runnable gameEnder = () -> sendEndGame(gameSession);
                 serverController.scheduleAsyncTask(gameEnder, 2);
             } else {
@@ -367,6 +423,11 @@ public class GameController {
         return true;
     }
 
+    /*
+        @Brief: This function is used to send the sketchbooks to the players.
+        @Param: email - The email of the player.
+        @Param: sketchBooks - The sketchbooks to be sent.
+     */
     private void sendSketchbooks(String email, ArrayList<SketchBook> sketchBooks) {
         try {
             sender.sendSketchbookData(email, sketchBooks);
@@ -375,6 +436,11 @@ public class GameController {
         }
     }
 
+    /*
+        @Brief: This function is used to send the sketchbook data to the player.
+        @Param: email - The email of the player.
+        @Note: This method is only used for development purposes.
+     */
     public void sendSketchbookData(String email) {
         GameSession gameSession = getGameSession(getGameSessionName(email));
         ArrayList<SketchBook> sketchBooks = new ArrayList<>();

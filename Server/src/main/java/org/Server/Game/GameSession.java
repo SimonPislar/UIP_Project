@@ -5,6 +5,7 @@ import org.Server.Pair;
 import java.util.ArrayList;
 import java.util.Collections;
 
+// This class represents a game session.
 public class GameSession {
 
     private int playerCount;
@@ -27,6 +28,7 @@ public class GameSession {
         this.gameOrder = new ArrayList<>();
     }
 
+    // Gets the last player in the list of players
     public Player getLastPlayer() {
         return this.players.get(this.players.size() - 1);
     }
@@ -47,6 +49,7 @@ public class GameSession {
     }
 
 
+    // Sets the game order
     public void setGameOrder() {
         this.gameOrder.addAll(this.players);
         Collections.shuffle(this.gameOrder);
