@@ -1,4 +1,6 @@
 package org.Server;
+
+// This class represents a pair of two objects. Implemented because Java does not have a built-in pair class that is good.
 public class Pair<T1, T2> {
     private T1 first; // First member of pair
     private T2 second; // Second member of pair
