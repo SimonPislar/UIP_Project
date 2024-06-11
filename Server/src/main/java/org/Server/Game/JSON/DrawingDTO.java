@@ -1,5 +1,7 @@
 package org.Server.Game.JSON;
 
+
+// This class is responsible for representing a drawing when it is sent to the client.
 public class DrawingDTO {
     private String painterEmail;
     private String drawing;
