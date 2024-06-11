@@ -1,5 +1,6 @@
 package org.Server.Game;
 
+// This class represents a drawing in the game.
 public class Drawing {
 
     private final String painterEmail;
