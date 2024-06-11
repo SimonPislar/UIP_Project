@@ -19,26 +19,31 @@ import java.util.List;
 @RequestMapping("/sender")
 public class Sender {
 
+    // This class is responsible for sending messages to the clients.
     WebSocketHandler webSocketHandler;
     private final ObjectMapper objectMapper;
 
+    // Auto-wired means that Spring will automatically create an instance of WebSocketHandler and pass it to the constructor.
     @Autowired
     public Sender(WebSocketHandler webSocketHandler, ObjectMapper objectMapper) {
         this.webSocketHandler = webSocketHandler;
         this.objectMapper = objectMapper;
     }
 
+    // This method sends a start game message to all clients.
     @PostMapping("/start-game")
     public void startGame(@RequestParam String email) throws Exception {
         webSocketHandler.handleTextMessage(null, new TextMessage("{\"message\":\"Start\", \"email\":\"" + email + "\"}"));
     }
 
+    // This method sends a message to a specific user.
     public void sendMessageToUser(String email, String messageContent) throws IOException {
         TextMessage message = new TextMessage(messageContent);
         webSocketHandler.sendMessageToUser(email, message);
         System.out.println("Message sent to " + email + ": " + messageContent);
     }
 
+    // This method sends the sketchbook data to a specific user.
     public void sendSketchbookData(String email, List<SketchBook> sketchBooks) throws IOException {
         List<SketchbookDTO> sketchbookDTOs = sketchBooks.stream()
                 .map(SketchbookMapper::toDTO)

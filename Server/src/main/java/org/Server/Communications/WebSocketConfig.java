@@ -9,12 +9,15 @@ import org.springframework.web.socket.config.annotation.WebSocketHandlerRegistry
 @EnableWebSocket
 public class WebSocketConfig implements WebSocketConfigurer {
 
+    // This class is responsible for configuring the WebSocket.
     private final WebSocketHandler webSocketHandler;
 
+    // This constructor takes a WebSocketHandler as a parameter.
     public WebSocketConfig(WebSocketHandler webSocketHandler) {
         this.webSocketHandler = webSocketHandler;
     }
 
+    // This method registers the WebSocket handler.
     @Override
     public void registerWebSocketHandlers(WebSocketHandlerRegistry registry) {
         registry.addHandler(webSocketHandler, "/ws")

@@ -21,8 +21,10 @@ public class ServerController {
     private ArrayList<User> usersSignedIn = new ArrayList<>();
     private final Sender sender;
 
+    // This is a thread pool that will be used to schedule asynchronous tasks.
     private final ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(4);
 
+    // Auto-wired means that Spring will automatically create an instance of the class and assign it to the variable.
     @Autowired
     public ServerController(DBController dbController, SecurityTools securityTools, Sender sender) {
         this.dbController = dbController;
@@ -62,6 +64,10 @@ public class ServerController {
         return result;
     }
 
+    /*
+        @Brief: this method is used to send a message to all users
+        @Param: message - The message to be sent.
+     */
     public void messageAllUsers(String message) {
         for (User user : usersSignedIn) {
             try {

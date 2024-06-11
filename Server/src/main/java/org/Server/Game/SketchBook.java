@@ -2,6 +2,7 @@ package org.Server.Game;
 
 import java.util.ArrayList;
 
+// This class represents a sketchbook in the game.
 public class SketchBook {
 
     private final String ownersEmail;

@@ -9,6 +9,8 @@ import java.util.Map;
 
 public class WebSocketInterceptor implements HandshakeInterceptor {
 
+    // This class is responsible for intercepting the handshake request.
+    // The email is extracted from the query parameters and stored as an attribute of the session.
     @Override
     public boolean beforeHandshake(ServerHttpRequest request, ServerHttpResponse response, WebSocketHandler wsHandler,
                                    Map<String, Object> attributes) throws Exception {
@@ -19,6 +21,7 @@ public class WebSocketInterceptor implements HandshakeInterceptor {
         return true;
     }
 
+    // This method is called after the handshake is complete.
     @Override
     public void afterHandshake(ServerHttpRequest request, ServerHttpResponse response, WebSocketHandler wsHandler,
                                Exception exception) {

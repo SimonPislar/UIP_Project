@@ -8,6 +8,7 @@ import java.util.stream.Collectors;
 
 public class SketchbookMapper {
 
+    // This method converts a SketchBook object to a SketchbookDTO object.
     public static SketchbookDTO toDTO(SketchBook sketchBook) {
         SketchbookDTO sketchbookDTO = new SketchbookDTO();
         sketchbookDTO.setOwnersEmail(sketchBook.getOwnersEmail());
@@ -19,6 +20,7 @@ public class SketchbookMapper {
         return sketchbookDTO;
     }
 
+    // This method converts a Drawing object to a DrawingDTO object.
     private static DrawingDTO toDTO(Drawing drawing) {
         DrawingDTO drawingDTO = new DrawingDTO();
         drawingDTO.setPainterEmail(drawing.getPainterEmail());

@@ -20,6 +20,7 @@ public class Receiver {
     ServerController serverController;
     GameController gameController;
 
+    // Autowired is used to automatically instantiate the ServerController and GameController objects.
     @Autowired
     public Receiver(ServerController serverController, GameController gameController) {
         this.serverController = serverController;
@@ -68,7 +69,7 @@ public class Receiver {
         @Param: email - The email of the user to be registered.
         @Param: username - The username of the user to be registered.
         @Param: password - The password of the user to be registered.
-        @Return: void - Returns nothing.
+        @Return: Map<String, Object> - Returns a map with the success and message.
      */
     @CrossOrigin(origins = "*")
     @PostMapping(path = "register-account")
@@ -130,7 +131,8 @@ public class Receiver {
         @Brief: This function is used to create a lobby
         @Param: email - The email of the user to create the lobby.
         @Param: lobbyName - The name of the lobby to be created.
-        @Return: void - Returns nothing.
+        @Param: playerCount - The number of players in the lobby.
+        @Return: Map<String, Object> - Returns a map with the success and message.
      */
     @CrossOrigin(origins = "*")
     @PostMapping(path = "create-lobby")
@@ -178,6 +180,11 @@ public class Receiver {
         return response;
     }
 
+    /*
+        @Brief: This function is used to get the players in a lobby
+        @Param: gameName - The name of the lobby to get the players.
+        @Return: Map<String, Object> - Returns the players in the lobby.
+     */
     @CrossOrigin(origins = "*")
     @PostMapping(path = "get-lobby-players")
     public Map<String, Object> getLobbyPlayers(@RequestParam (value = "gameName") String gameName) {
@@ -226,7 +233,7 @@ public class Receiver {
         @Brief: This function is used to join a lobby
         @Param: email - The email of the user to join the lobby.
         @Param: lobbyName - The name of the lobby to be joined.
-        @Return: String - Returns nothing.
+        @Return: Map<String, Object> - Returns a map with the success and message.
      */
     @CrossOrigin(origins = "*")
     @PostMapping(path = "join-lobby")
@@ -267,6 +274,11 @@ public class Receiver {
         return response;
     }
 
+    /*
+        @Brief: This function is used to submit a word
+        @Param: email - The email of the user to submit a word.
+        @Return: Map<String, Object> - Returns a map with the success and message.
+     */
     @CrossOrigin(origins = "*")
     @PostMapping(path = "submit-word")
     public Map<String, Object> submitWord(@RequestParam (value = "email") String email,
@@ -284,6 +296,12 @@ public class Receiver {
         return response;
     }
 
+    /*
+        @Brief: This function is used to submit a drawing
+        @Param: email - The email of the user to submit a drawing.
+        @Param: rawDrawingData - The raw drawing data to be submitted.
+        @Return: Map<String, Object> - Returns a map with the success and message.
+     */
     @CrossOrigin(origins = "*")
     @PostMapping(path = "submit-drawing")
     public Map<String, Object> submitDrawing(@RequestParam (value = "email") String email,
@@ -300,6 +318,12 @@ public class Receiver {
         return response;
     }
 
+    /*
+        @Brief: This function is used to submit a guess
+        @Param: email - The email of the user to submit a guess.
+        @Param: guess - The guess to be submitted.
+        @Return: Map<String, Object> - Returns a map with the success and message.
+     */
     @CrossOrigin(origins = "*")
     @PostMapping(path = "submit-guess")
     public Map<String, Object> submitGuess(@RequestParam (value = "email") String email,
@@ -330,6 +354,11 @@ public class Receiver {
         return response;
     }
 
+    /*
+        @Brief: This function is used to get the sketchbooks
+        @Param: email - The email of the user to get the sketchbooks.
+        @Return: Map<String, Object> - Returns a map with the success and message.
+     */
     @CrossOrigin(origins = "*")
     @PostMapping(path = "get-sketchbooks")
     public Map<String, Object> getSketchbooks(@RequestParam (value = "email") String email) {
@@ -339,6 +368,11 @@ public class Receiver {
         return response;
     }
 
+    /*
+        @Brief: This function is used to exit a finished game.
+        @Param: email - The email of the user to exit the finished game.
+        @Return: Map<String, Object> - Returns a map with the success and message.
+     */
     @CrossOrigin(origins = "*")
     @PostMapping(path = "exit-finished-game")
     public Map<String, Object> exitFinishedGame(@RequestParam (value = "email") String email) {

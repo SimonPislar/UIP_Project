@@ -1,5 +1,6 @@
 package org.Server.Game;
 
+// This class represents a word in the game.
 public class Word {
 
     private final String word;

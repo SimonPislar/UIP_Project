@@ -2,6 +2,7 @@ package org.Server.Game.JSON;
 
 import java.util.List;
 
+// This class is responsible for representing a sketchbook when it is sent to the client.
 public class SketchbookDTO {
     private String ownersEmail;
     private String originalWord;
