@@ -2,10 +2,10 @@ import React, {useEffect, useRef, useState} from "react";
 import {useLocation, useNavigate} from "react-router-dom";
 import useWebSocket from "react-use-websocket";
 
-import './CSS/DisplayGameResult.css';
-import Button from "./Button";
-import {useLanguage} from "./LanguageContext";
-import clientConfig from './clientConfig.json';
+import '../CSS/DisplayGameResult.css';
+import Button from "../Components/Button";
+import {useLanguage} from "../Components/LanguageContext";
+import clientConfig from '../Resources/clientConfig.json';
 
 function DisplayGameResult() {
 
@@ -182,7 +182,7 @@ function DisplayGameResult() {
                                 </div>
                                 <div className="main-button">
                                     {tutorial && !pressedOpen &&
-                                        <button onClick={toggleOpen} className="begin-button-small show">{isOpen ? "{translations.close}" : "{translations.open}"}</button>
+                                        <button onClick={toggleOpen} className="begin-button-small show">{isOpen ? translations.close : translations.open}</button>
                                     }
                                     {!tutorial &&
                                         <Button size={"small"} onClick={toggleOpen} text={isOpen ? "{translations.close}" : "{translations.open}"} />

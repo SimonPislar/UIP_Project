@@ -1,11 +1,11 @@
 import React, { useRef, useEffect, useState } from 'react';
 import { Stage, Layer, Rect, Line } from 'react-konva';
-import './CSS/Canvas.css';
+import '../CSS/Canvas.css';
 import { useLocation, useNavigate } from "react-router-dom";
-import Button from "./Button";
-import newspaper from './media/newspaper-scrap.mp3';
-import {useLanguage} from "./LanguageContext";
-import clientConfig from './clientConfig.json';
+import Button from "../Components/Button";
+import newspaper from '../media/newspaper-scrap.mp3';
+import {useLanguage} from "../Components/LanguageContext";
+import clientConfig from '../Resources/clientConfig.json';
 
 function Canvas() {
     // This is the IP address of the server

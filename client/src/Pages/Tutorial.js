@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from "react";
-import './CSS/Tutorial.css';
-import Button from "./Button";
+import '../CSS/Tutorial.css';
+import Button from "../Components/Button";
 import {useLocation, useNavigate} from "react-router-dom";
-import {useLanguage} from "./LanguageContext";
+import {useLanguage} from "../Components/LanguageContext";
 
 function Tutorial() {
 

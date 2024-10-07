@@ -1,10 +1,10 @@
 import React, { useState } from "react";
-import './CSS/Register.css';
-import Input from "./Input";
-import Button from "./Button";
+import '../CSS/Register.css';
+import Input from "../Components/Input";
+import Button from "../Components/Button";
 import { useNavigate } from "react-router-dom";
-import {useLanguage} from "./LanguageContext";
-import clientConfig from './clientConfig.json';
+import {useLanguage} from "../Components/LanguageContext";
+import clientConfig from '../Resources/clientConfig.json';
 
 function Register() {
 

@@ -1,11 +1,11 @@
 
 import React, {useEffect, useRef, useState} from "react";
-import './CSS/WordInput.css';
-import Input from "./Input";
-import Button from "./Button";
+import '../CSS/WordInput.css';
+import Input from "../Components/Input";
+import Button from "../Components/Button";
 import {useLocation, useNavigate} from "react-router-dom";
-import {useLanguage} from "./LanguageContext";
-import clientConfig from './clientConfig.json';
+import {useLanguage} from "../Components/LanguageContext";
+import clientConfig from '../Resources/clientConfig.json';
 
 function WordInput() {
 

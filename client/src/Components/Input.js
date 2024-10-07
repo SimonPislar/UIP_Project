@@ -1,5 +1,5 @@
 import React from "react";
-import './CSS/Input.css';
+import '../CSS/Input.css';
 
 function Input({ type, placeholder, value, onChange, onFocus, onBlur, ref }) {
     // This is the JSX code for the Input component used throughout the application

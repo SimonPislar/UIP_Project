@@ -1,10 +1,10 @@
 import React from 'react';
-import './CSS/Home.css';
-import Button from "./Button";
+import '../CSS/Home.css';
+import Button from "../Components/Button";
 import {useLocation, useNavigate} from "react-router-dom";
-import LinkButton from "./LinkButton";
-import {useLanguage} from "./LanguageContext";
-import clientConfig from './clientConfig.json';
+import LinkButton from "../Components/LinkButton";
+import {useLanguage} from "../Components/LanguageContext";
+import clientConfig from '../Resources/clientConfig.json';
 
 function Home() {
 

@@ -1,8 +1,8 @@
 import React, { useEffect } from "react";
 import {useLocation, useNavigate} from "react-router-dom";
 import useWebSocket from "react-use-websocket";
-import {useLanguage} from "./LanguageContext";
-import clientConfig from './clientConfig.json';
+import {useLanguage} from "../Components/LanguageContext";
+import clientConfig from '../Resources/clientConfig.json';
 
 // The WaitingForServer component is used to wait for the server to send a message (synchronizing all players)
 function WaitingForServer() {

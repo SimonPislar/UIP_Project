@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import './CSS/App.css';
+import '../CSS/App.css';
 import { useNavigate } from "react-router-dom";
-import { useLanguage } from './LanguageContext';
-import clientConfig from './clientConfig.json';
+import { useLanguage } from '../Components/LanguageContext';
+import clientConfig from '../Resources/clientConfig.json';
 
 function App() {
     const [isConnected, setIsConnected] = useState(false);
@@ -17,6 +17,7 @@ function App() {
             const response = await fetch(IP + '/receiver/ping');
             const data = await response.json();
             console.log(data);
+
             if (data.success) {
                 console.log('Connection established successfully!');
                 setTimeout(() => {
@@ -25,7 +26,11 @@ function App() {
                 setIsConnected(true);
             } else {
                 console.log('Connection not successful:', data);
+                setTimeout(() => {
+                    establishConnection()
+                }, delayInMilliseconds);
             }
+
         } catch (error) {
             console.log(error);
         }

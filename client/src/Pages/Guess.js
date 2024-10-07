@@ -1,10 +1,10 @@
 import React, {useEffect, useRef, useState} from "react";
 import {useLocation, useNavigate} from "react-router-dom";
-import './CSS/Guess.css';
-import Input from "./Input";
-import Button from "./Button";
-import {useLanguage} from "./LanguageContext";
-import clientConfig from './clientConfig.json';
+import '../CSS/Guess.css';
+import Input from "../Components/Input";
+import Button from "../Components/Button";
+import {useLanguage} from "../Components/LanguageContext";
+import clientConfig from '../Resources/clientConfig.json';
 
 function Guess() {
 

@@ -1,7 +1,7 @@
 import React from "react";
-import './CSS/Language.css';
-import Button from "./Button";
-import {useLanguage} from "./LanguageContext";
+import '../CSS/Language.css';
+import Button from "../Components/Button";
+import {useLanguage} from "../Components/LanguageContext";
 import {useLocation, useNavigate} from "react-router-dom";
 
 function Language() {
